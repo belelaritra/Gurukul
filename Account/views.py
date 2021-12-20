@@ -50,6 +50,11 @@ def handleSignup(request):
         pass1 = request.POST['pass1']
         pass2 = request.POST['pass2']
 
+        roll_number = request.POST['roll_number']
+        phone_number = request.POST['phone_number']
+        branch = request.POST['branch']
+        year = request.POST['year']
+
         try:
             # Username 
             if User.objects.filter(username=username).exists():
@@ -98,9 +103,10 @@ def handleSignup(request):
             user_obj.last_name = lname
             user_obj.save()
 
-            # Create Profile
             auth_token = str(uuid.uuid4())
-            profile_obj = Profile.objects.create(user=user_obj, auth_token = auth_token)
+            # Create Profile
+
+            profile_obj = Profile.objects.create(user=user_obj,fname=fname,lname=lname,email=email,roll_number=roll_number,phone_number=phone_number,branch=branch, year=year, auth_token = auth_token)
             profile_obj.save()
             
             send_authentication_mail(username, email, auth_token)
