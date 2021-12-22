@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
 from .models import *
+from Question.models import *
 import uuid
 
 # Create your views here.
@@ -167,3 +168,21 @@ def handleLogout(request):
         return redirect('home')
     # Means Direct Site Access
     return HttpResponse('404 - Not Found')
+
+@login_required(login_url='/login')
+def search(request):
+    query = request.GET['query']
+    # Very long query
+    if len(query) > 78:
+        allposts = Question.objects.none()
+    # Else
+    else:
+        allposts_Title = Question.objects.filter(title__icontains=query) # .objects --> Get all the objects from the database
+        allposts_Content = Question.objects.filter(content__icontains=query)  #Content contains Query
+        
+        allposts = allposts_Title.union(allposts_Content) # Union --> Get all the objects from the database
+    if allposts.count() == 0:
+        messages.warning(request, 'No search results found. Please refine your search.')
+    params={'allposts':allposts, 'query':query}
+    return render(request, 'Account/search.html', params)
+    # return HttpResponse('Search')

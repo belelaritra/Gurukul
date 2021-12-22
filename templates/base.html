@@ -59,7 +59,15 @@
     <!-- Collapsible wrapper -->
 
     {% if user.is_authenticated %}
-        
+    {% comment %} <form method="GET" action="/search" class="d-flex">
+      <input name="query" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+      <button class="btn btn-outline-success" type="submit">
+        Search
+      </button>
+    </form> {% endcomment %}
+    <form method="GET" action="/search" class="form-inline md-form form-sm mt-0 rounded pull-right">
+      <input name="query" id="search" class="form-control rounded form-control-sm ml-3 w-75 pull-right" style="float: right;" type="search" placeholder="Search" aria-label="Search">
+    </form>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -83,16 +91,26 @@
 
         {% else %}
         <!-- Login & Signup Button -->
-        <a href="/admin" target="_blank" role= "admin" class="btn btn-outline-primary btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
+        {% comment %}  <a href="/admin" target="_blank" role= "admin" class="btn btn-outline-dark btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
           Admin
         </a>
-        <a href="/login" role= "button" class="btn btn-outline-primary btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
+        <a href="/login" role= "button" class="btn btn-outline-dark btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
           Login
         </a>
-        <a href="/signup" role= "button"  class="btn btn-outline-primary btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
+        <a href="/signup" role= "button"  class="btn btn-outline-dark btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
+          Signup
+        </a> {% endcomment %}
+        <a href="/admin" role= "button" target="_blank" class="link-dark text-decoration-none">
+          Admin
+        </a>
+        &nbsp;|&nbsp;
+        <a href="/login" role= "button" class="link-dark text-decoration-none">
+          Login
+        </a>
+        &nbsp;/&nbsp;
+        <a href="/signup" role= "button" class="link-dark text-decoration-none">
           Signup
         </a>
-
         {% endif %}
       </div>
     </div>

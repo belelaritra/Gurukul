@@ -3,8 +3,10 @@ from django.shortcuts import redirect, render
 from .models import Question, Answer
 from django.contrib import messages
 from .templatetags import get_dict
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url='/login')
 def feed(request):
     allposts = Question.objects.all() # .objects --> Get all the objects from the database
     # print(allposts)
@@ -12,6 +14,7 @@ def feed(request):
     context = {"allposts": allposts}
     return render(request, 'Question/feed.html', context)
 
+@login_required(login_url='/login')
 def question(request, slug):
     post = Question.objects.filter(slug=slug).first() # .filter --> Filter the objects
     
@@ -39,6 +42,7 @@ def question(request, slug):
     return render(request, 'Question/question.html', context)
     # return HttpResponse(f'Blog Post : {slug}')
 
+@login_required(login_url='/login')
 def comment(request):
     if request.method == 'POST':
         comment = request.POST.get('comment')
