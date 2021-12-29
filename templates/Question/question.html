@@ -14,9 +14,9 @@
 </div>
 
 <div class="container">
-  <h2>Comments ({{comments.count}})</h2>
+  <h2>Answers ({{comments.count}})</h2>
   {% if user.is_anonymous %}
-    <p>Please <a href="/login">Login</a> to post a comment</p>
+    <p>Please <a href="/login">Login</a> to post a Answer</p>
   {% else %}
   {% comment %} Post Comments {% endcomment %}
     <form action="/question/comment" method="POST">
@@ -26,8 +26,8 @@
       <input type="submit" class="btn btn-primary" value="submit" /> {% endcomment %}
 
       <div class="form-group">
-        <label for="comment">Post Comment</label>
-        <textarea rows="5" type="paragraph_text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Comment"></textarea>
+        <label for="comment">Post Answer</label>
+        <textarea rows="5" type="paragraph_text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Answer"></textarea>
       </div>
         <input type="hidden" name="parent_serial_no" value="{{comment.serial_no}}">
         <input type="hidden" class="form-check-input" name="post_serial_no" id="post_serial_no" value="{{post.serial_no}}">
@@ -56,13 +56,13 @@
     <div class="col-md-1">
       <img class="rounded mx-auto d-block w-100 p-2" src="/static/images/user.png" width="15px" />  
     </div>
-    <div class="col-md-11"> <b>{{comment.user.username}}</b>  <span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span><br>
+    <div class="col-md-11"> <b>{{comment.user.first_name}} {{comment.user.last_name}}</b> <small style="color:#808080">@{{comment.user.username}} </small>&nbsp;<span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span><br>
       <div>{{comment.comment}}</div>
       
       {% comment %} Reply {% endcomment %}
       <div class="reply mx-0">
         {% if reply_count|get_dict:comment.serial_no %}
-        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#view_replies_{{comment.serial_no}}" aria-expanded="false" aria-controls="view_replies_{{comment.serial_no}}" >
+        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#view_replies_{{comment.serial_no}}" data-parent="#myGroup" aria-expanded="false" aria-controls="view_replies_{{comment.serial_no}}" >
           View Replies ({{reply_count|get_dict:comment.serial_no}})
         </button>
         {% else %}
@@ -79,9 +79,14 @@
               {% csrf_token %}
               <div class="form-group">
                 <label for="comment">Post Reply</label>
-                <input type="text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Reply">
+                <textarea rows="3" type="paragraph_text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Reply"></textarea>
                 <input type="hidden" name="parent_serial_no" value="{{comment.serial_no}}">
               </div>
+              {% comment %} <div class="form-group">
+                <label for="comment">Post Reply</label>
+                <input type="text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Reply">
+                <input type="hidden" name="parent_serial_no" value="{{comment.serial_no}}">
+              </div> {% endcomment %}
                 <input type="hidden" class="form-check-input" name="post_serial_no" id="post_serial_no" value="{{post.serial_no}}">
               <button type="submit" class="btn btn-primary my-3">Submit</button>
             </form>
@@ -97,7 +102,8 @@
               <div class="col-md-1">
                 <img class="rounded mx-auto d-block w-75 my-2" src="/static/images/user.png" width="15px" />
               </div>
-              <div class="col-md-11"> <b>{{reply.user.username}}</b>  <span class="badge alert-primary">{{reply.timestamp | naturaltime}} </span>
+              <div class="col-md-11"> <b>{{reply.user.first_name}} {{reply.user.last_name}}</b> <small style="color:#808080">@{{reply.user.username}} </small>&nbsp;<span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span>
+              {% comment %} <div class="col-md-11"> <b>{{reply.user.username}}</b>  <span class="badge alert-primary">{{reply.timestamp | naturaltime}} </span> {% endcomment %}
                 <br>{{reply.comment}}</div>
               {% comment %} <div class="my-2"><b>{{reply.user.username}}</b> <span class="badge alert-primary">{{reply.timestamp | naturaltime}}</span>
                 <br>{{reply.comment}}

@@ -4,6 +4,7 @@ from .models import Question, Answer
 from django.contrib import messages
 from .templatetags import get_dict
 from django.contrib.auth.decorators import login_required
+from .models import Question, Answer
 
 # Create your views here.
 @login_required(login_url='/login')

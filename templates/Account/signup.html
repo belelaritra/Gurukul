@@ -9,9 +9,18 @@
         {% comment %} <div class="card text-black" style="border-radius: 25px;"> {% endcomment %}
           <div class="card-body p-md-5">
             <div class="row justify-content-center">
-              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+              
+              {% comment %} <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2"> {% endcomment %}
+             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
+                <p class="text-center h1 fw-bold mx-1 mx-md-4">Sign up</p>
+                {% comment %} 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+                <span class="abt">Already have an account? <a href="/login">Log In</a></span> {% endcomment %}
+                <p class="text-center h8 ">Already have an account? <a href="/login" role= "button" class="text-decoration-none">
+                  Login
+                </a>
+              </p>
 
                 {% if messages %}
                 {% for message in messages %}
@@ -37,7 +46,7 @@
                       </div>
                     </div> 
                     <div class="col md-6 d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      {% comment %} <i class="fas fa-user fa-lg me-3 fa-fw"></i> {% endcomment %}
                       <div class="form-outline flex-fill mb-0">
                         {% comment %} <label class="form-label" for="form3Example1c">Last Name</label> {% endcomment %}
                         <input type="text" name="lname"
@@ -47,7 +56,7 @@
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                    <i class="fas fa-user-circle fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill input-group mb-0">
                       <div class="input-group-prepend">
                         <span class="input-group-text">@</span>
@@ -70,8 +79,16 @@
                     </div>
                   </div>
                   
-                  <div class="d-flex flex-row align-items-center mb-4">
+                  {% comment %} <div class="input-group mb-3">
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                    <input type="text" name="email" id="email" class="form-control" placeholder="Email" aria-label="Recipient's username" maxlength="100" required>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon2">@rcciit.org.in</span>
+                    </div>
+                  </div> {% endcomment %}
+
+                  <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="tel" name="phone_number"
                       id="phone_number" class="form-control" placeholder="Phone Number" maxlength="10" required>
@@ -80,7 +97,7 @@
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                    <i class="fas fa-sort-numeric-up-alt fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
                       <input type="text" name="roll_number"
                       id="roll_number" class="form-control" placeholder="Roll Number" maxlength="12" required>
@@ -97,7 +114,7 @@
                       </div>
                     </div>  {% endcomment %}
                     <div class="col md-6 d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                    <i class="fas fa-code-branch fa-lg me-3 fa-fw"></i>
                       {% comment %} <label>Stream</label> {% endcomment %}
                       <select class="form-control" name="branch" required>
                         <option value="" hidden>Branch</option>
@@ -109,7 +126,7 @@
                       </select>
                     </div>
                     <div class="col md-6 d-flex flex-row align-items-center mb-4">
-                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <i class="fas fa-calendar fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         {% comment %} <label class="form-label" for="form3Example1c">Last Name</label> {% endcomment %}
                         <input type="number" name="year"
@@ -129,7 +146,7 @@
                   </div>
 
                   <div class="col md-6 d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                    {% comment %} <i class="fas fa-lock fa-lg me-3 fa-fw"></i> {% endcomment %}
                     <div class="form-outline flex-fill mb-0">
                       {% comment %} <label class="form-label" for="form3Example4c">Password</label> {% endcomment %}
                       <input type="password" name="pass2"
@@ -137,7 +154,7 @@
                     </div>
                   </div>
                 </div>
-                  <div class="form-check d-flex justify-content-center mb-5">
+                  <div class="form-check d-flex justify-content-center mb-3">
                     <input
                       class="form-check-input me-2"
                       type="checkbox"
