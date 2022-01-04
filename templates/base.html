@@ -57,19 +57,20 @@
           <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a></li>
           </ul>
           <li><form method="GET" action="/search" class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right">
-            <input name="query" id="search" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" style="float: right;" type="search" placeholder="Search" aria-label="Search">
+            <input name="query" id="search" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="search" placeholder="Search" aria-label="Search">
         </form></li>
     {% else %}
-        
+        <li>
         <a href="/admin" role= "button" target="_blank" class="link-dark text-decoration-none"><i class="fas fa-user-cog"></i>
         </a>
-        &nbsp;&nbsp;|&nbsp;
+      </li>
         
+        <li>
         <a href="/login" class="link-dark text-decoration-none" role= "button"> <i  class="fa fa-sign-in" aria-hidden="true"></i></a>
-        &nbsp;&nbsp;/&nbsp;&nbsp;
-        
+        </li>
+        <li>
         <a href="/signup" class="link-dark text-decoration-none" role= "button" ><i  class="fa fa-user-plus" aria-hidden="true"></i></a>
-      
+        </li>  
         {% endif %}
       </ul>
     <i class="bi bi-list mobile-nav-toggle"></i>
