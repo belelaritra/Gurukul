@@ -1,0 +1,26 @@
+
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock title %}
+{% block homeactive %} active {% endblock homeactive %} 
+{% block body %}
+
+<div class="d-flex justify-content-center align-items-center">
+{% if user.is_authenticated %}
+  {% if user.is_superuser %}
+    Hi : admin||&nbsp;Click here to :&nbsp;
+    <a name="logout" id="logout" style="text-decoration: none;" href="/logout">Logout</a>
+  {% else %}
+  Hi {{request.user.username }} ||&nbsp;Click here to :&nbsp;
+  <a name="logout" id="logout" style="text-decoration: none;" href="/logout">Logout</a>
+  {% endif %}
+{% else %}
+  You are not logged in ||&nbsp;
+  <a href="{% url 'login' %}" style="text-decoration: none;">Login</a> &nbsp;or&nbsp;
+  <a href="{% url 'signup' %}" style="text-decoration: none;">Signup</a>
+</div>
+{% endif %} 
+</div>
+
+
+{% endblock body %}

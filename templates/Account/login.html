@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %} Login {% endblock title %}
+{% block body %}
+
+
+
+{% comment %} <section class="vh-100" style="background-color: #eee;"> {% endcomment %}
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-12 col-xl-11">
+        {% comment %} <div class="card text-black" style="border-radius: 25px;"> {% endcomment %}
+          <div class="card-body p-md-5">
+            <div class="row justify-content-center">
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Log In</p>
+
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                  <strong>Message: </strong> {{ message }}
+                  <span type="button" class="close pull-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+                  
+                </div>
+                {% comment %} <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}</div> {% endcomment %}
+                {% endfor %}
+              {% endif %}
+
+                <form class="mx-1 mx-md-4" method="POST">
+                  {% csrf_token %}
+                  {% comment %} <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="text" id="form3Example1c" class="form-control" />
+                      <label class="form-label" for="form3Example1c">Your Name</label>
+                    </div>
+                  </div> {% endcomment %}
+
+                  <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill input-group mb-0">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">@</span>
+                      </div>
+                      <input type="text" name="loginusername" class="form-control" id="loginusername"
+                      aria-describedby="loginusername" placeholder="Username" maxlength="10" required>
+                      {% comment %} <label class="form-label" for="form3Example3c">Your Username</label> {% endcomment %}
+                      
+                      </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill mb-0">
+                      {% comment %} <label class="form-label" for="form3Example4c">Password</label> {% endcomment %}
+                      <input type="password" name="loginpassword" id="loginpassword" class="form-control" placeholder="Password" required>
+                    </div>
+                  </div>
+
+                  {% comment %} <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="password" id="form3Example4cd" class="form-control" />
+                      <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                    </div>
+                  </div> {% endcomment %}
+
+                  {% comment %} <div class="form-check d-flex justify-content-center mb-5">
+                    <input
+                      class="form-check-input me-2"
+                      type="checkbox"
+                      value=""
+                      id="form2Example3c"
+                    />
+                    <label class="form-check-label" for="form2Example3">
+                      I agree all statements in <a href="#!">Terms of service</a>
+                    </label>
+                  </div> {% endcomment %}
+
+                  <p class="text-start h8 mx-3">Don't have an Account? <a href="/signup" role= "button" class="text-decoration-none">
+                    Create One
+                  </a>
+                </p>
+
+                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                  </div>
+
+                </form>
+
+              </div>
+              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp" class="img-fluid" alt="Sample image">
+
+              </div>
+            </div>
+          </div>
+        {% comment %} </div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Main Content -->
+  {% comment %} <div class="global-container">
+    <div class="card login-form">
+      <div class="card-body">
+        <h3 class="card-title text-center">Log in to Gurukul</h3>
+        {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+        <div class="card-text">
+          <!--
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">Incorrect username or password.</div> -->
+          <form method="POST">
+
+            {% csrf_token %}
+
+            <!-- to error: add class "has-danger" -->
+            <div class="form-group">
+              <label for="loginusername_Label">Username</label>
+              <input
+                type="text"
+                name="loginusername"
+                class="form-control form-control-sm"
+                id="loginusername"
+                aria-describedby="loginusername"
+              />
+            </div>
+            <div class="form-group">
+              <label for="loginpassword">Password</label>
+              
+              <input
+                type="password"
+                name="loginpassword"
+                class="form-control form-control-sm"
+                id="loginpassword"
+              />
+            </div>
+            <a href="#" style="float: right; font-size: 12px"
+                >Forgot password?</a
+              >
+            <button type="submit" class="btn btn-primary btn-block">
+              Sign in
+            </button>
+
+            <div class="sign-up">
+              Don't have an account? <a href="{% url 'signup' %}">Create One</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> {% endcomment %}
+{% endblock body %}

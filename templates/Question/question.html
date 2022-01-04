@@ -1,0 +1,131 @@
+{% extends 'base.html' %} 
+{% block title %} Question {% endblock title %} 
+{% block body %}
+{% load humanize %}
+{% load get_dict %}
+
+<div class="container my-3">
+  <h2 class="blog-post-title">{{post.title}}</h2>
+  <p class="blog-post-meta">
+    {{post.timestamp}} by <a href="#">{{post.author}}</a>
+  </p>
+
+  <p>{{post.content}}</p>
+</div>
+
+<div class="container">
+  <h2>Answers ({{comments.count}})</h2>
+  {% if user.is_anonymous %}
+    <p>Please <a href="/login">Login</a> to post a Answer</p>
+  {% else %}
+  {% comment %} Post Comments {% endcomment %}
+    <form action="/question/comment" method="POST">
+      {% csrf_token %}
+      {% comment %} <input type="text" name="comment" placeholder="Enter your comment" />
+      <input type="hidden" name="post_serial_no" value="{{post.serial_no}}" />
+      <input type="submit" class="btn btn-primary" value="submit" /> {% endcomment %}
+
+      <div class="form-group">
+        <label for="comment">Post Answer</label>
+        <textarea rows="5" type="paragraph_text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Answer"></textarea>
+      </div>
+        <input type="hidden" name="parent_serial_no" value="{{comment.serial_no}}">
+        <input type="hidden" class="form-check-input" name="post_serial_no" id="post_serial_no" value="{{post.serial_no}}">
+      <button type="submit" class="btn btn-primary my-3">Submit</button>
+    </form>
+    
+  {% comment %} Show Comments {% endcomment %}
+  {% for comment in comments %}
+  {% comment %} <div class="row">
+    <div class="col-md-12">
+        <div class="media"> 
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-8 d-flex">
+                      <img class="mr-3 rounded-circle" alt="Bootstrap Media Preview" src="http://assets.stickpng.com/images/585e4bf3cb11b227491c339a.png" width="30" height="30"/>  <h5>{{comment.user.username}}</h5> <span>- {{comment.timestamp}}</span>
+                    </div>
+                    <div class="col-4">
+                        <div class="pull-right reply"> <a href="#"><span><i class="fa fa-reply"></i> reply</span></a> </div>
+                    </div>
+                </div> 
+                {{comment.comment}}
+            </div>
+        </div> {% endcomment %}
+
+  <div class="row my-3 mx-0">
+    <div class="col-md-1">
+      <img class="rounded mx-auto d-block w-100 p-2" src="/static/images/user.png" width="15px" />  
+    </div>
+    <div class="col-md-11"> <b>{{comment.user.first_name}} {{comment.user.last_name}}</b> <small style="color:#808080">@{{comment.user.username}} </small>&nbsp;<span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span><br>
+      <div>{{comment.comment}}</div>
+      
+      {% comment %} Reply {% endcomment %}
+      <div class="reply mx-0">
+        {% if reply_count|get_dict:comment.serial_no %}
+        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#view_replies_{{comment.serial_no}}" data-parent="#myGroup" aria-expanded="false" aria-controls="view_replies_{{comment.serial_no}}" >
+          View Replies ({{reply_count|get_dict:comment.serial_no}})
+        </button>
+        {% else %}
+        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#view_replies_{{comment.serial_no}}" aria-expanded="false" aria-controls="view_replies_{{comment.serial_no}}" disabled>
+          View Replies ({{reply_count|get_dict:comment.serial_no}})
+        </button>
+        {% endif %}
+          <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#replyBox_{{comment.serial_no}}" aria-expanded="false" aria-controls="replyBox_{{comment.serial_no}}">
+            Reply
+          </button>
+        <div class="collapse" id="replyBox_{{comment.serial_no}}">
+          <div class="card card-body my-2">
+            <form action="/question/comment" method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="comment">Post Reply</label>
+                <textarea rows="3" type="paragraph_text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Reply"></textarea>
+                <input type="hidden" name="parent_serial_no" value="{{comment.serial_no}}">
+              </div>
+              {% comment %} <div class="form-group">
+                <label for="comment">Post Reply</label>
+                <input type="text" class="form-control" name="comment" id="comment" aria-describedby="emailHelp" placeholder="Your Reply">
+                <input type="hidden" name="parent_serial_no" value="{{comment.serial_no}}">
+              </div> {% endcomment %}
+                <input type="hidden" class="form-check-input" name="post_serial_no" id="post_serial_no" value="{{post.serial_no}}">
+              <button type="submit" class="btn btn-primary my-3">Submit</button>
+            </form>
+          
+          </div>
+        </div>
+
+      <div class="collapse replies bg-light my-2" id="view_replies_{{comment.serial_no}}">
+        {% for reply in reply_Dict|get_dict:comment.serial_no %}
+          {% comment %} {{reply.comment}}<br> {% endcomment %}
+          {% comment %} <div class="col-md-11"> <b>{{reply.user.username}}</b>  <span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span><br> {% endcomment %}
+            <div class="row">
+              <div class="col-md-1">
+                <img class="rounded mx-auto d-block w-75 my-2" src="/static/images/user.png" width="15px" />
+              </div>
+              <div class="col-md-11"> <b>{{reply.user.first_name}} {{reply.user.last_name}}</b> <small style="color:#808080">@{{reply.user.username}} </small>&nbsp;<span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span>
+              {% comment %} <div class="col-md-11"> <b>{{reply.user.username}}</b>  <span class="badge alert-primary">{{reply.timestamp | naturaltime}} </span> {% endcomment %}
+                <br>{{reply.comment}}</div>
+              {% comment %} <div class="my-2"><b>{{reply.user.username}}</b> <span class="badge alert-primary">{{reply.timestamp | naturaltime}}</span>
+                <br>{{reply.comment}}
+              </div> {% endcomment %}
+            </div>
+            
+        {% endfor %}
+      </div>
+      </div>
+
+    </div>
+  </div> 
+
+{% endfor %}
+
+{% endif %}
+</div>
+
+<!-- <nav class="blog-pagination" aria-label="Pagination">
+      <a class="btn btn-outline-primary" href="#">Older</a>
+      <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
+    </nav>
+ -->
+
+{% endblock body %}
