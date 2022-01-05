@@ -2,6 +2,7 @@ from django import template
 
 register = template.Library()
 
-@register.filter(name='get_dict')
+
+@register.filter(name="get_dict")
 def get_dict(dict, key):
-    return dict.get(key) #will return dictionary key
+    return dict.get(key)  # will return dictionary key

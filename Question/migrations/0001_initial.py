@@ -16,25 +16,44 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('serial_no', models.AutoField(primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=100)),
-                ('content', models.TextField()),
-                ('author', models.CharField(max_length=100)),
-                ('slug', models.SlugField(max_length=100)),
-                ('timestamp', models.DateTimeField(blank=True)),
+                ("serial_no", models.AutoField(primary_key=True, serialize=False)),
+                ("title", models.CharField(max_length=100)),
+                ("content", models.TextField()),
+                ("author", models.CharField(max_length=100)),
+                ("slug", models.SlugField(max_length=100)),
+                ("timestamp", models.DateTimeField(blank=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Answer',
+            name="Answer",
             fields=[
-                ('serial_no', models.AutoField(primary_key=True, serialize=False)),
-                ('comment', models.TextField()),
-                ('timestamp', models.DateTimeField(default=django.utils.timezone.now)),
-                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Question.answer')),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Question.question')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ("serial_no", models.AutoField(primary_key=True, serialize=False)),
+                ("comment", models.TextField()),
+                ("timestamp", models.DateTimeField(default=django.utils.timezone.now)),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="Question.answer",
+                    ),
+                ),
+                (
+                    "post",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="Question.question",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

@@ -4,9 +4,8 @@ from .views import *
 
 urlpatterns = [
     # API to post comment
-    path('comment', comment, name='comment'),
-
+    path("comment", comment, name="comment"),
     # path('admin/', admin.site.urls),
-    path('', feed, name='feed'),
-    path('<str:slug>/', question, name='question'),
+    path("", feed, name="feed"),
+    path("<str:slug>/", question, name="question"),
 ]
