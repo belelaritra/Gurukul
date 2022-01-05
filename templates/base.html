@@ -13,7 +13,23 @@
     {% comment %} Fa {% endcomment %}
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
   
-    <link rel="icon" href="/static/images/Gurukul.png" type="image/x-icon">
+    <link rel="icon" href="//static/images/Gurukul.png" type="image/x-icon">
+    <link href="/static/img/favicon.png" rel="icon">
+  <link href="/static/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  {% comment %} <link href="/static/vendor/boxicons/css/boxicons.min.css" rel="stylesheet"> {% endcomment %}
+  <link href="/static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="/static/css/style.css" rel="stylesheet">
+
     
     <title>{% block title %} {% endblock title %}</title>
 </head>
@@ -21,7 +37,46 @@
 <body>
 
   <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+  <nav id="navbar" class="navbar">
+    <a class="navbar-brand mt-2 mt-lg-0" href="/">
+      <img src="/static/images/Gurukul.png" height="35" alt="Gurukul Logo"/><img src="https://see.fontimg.com/api/renderfont4/Gg5D/eyJyIjoiZnMiLCJoIjoxMzAsInciOjIwMDAsImZzIjo2NSwiZmdjIjoiIzAwMDAwMCIsImJnYyI6IiNGRkZGRkYiLCJ0IjoxfQ/R3VydWt1bA/samarkan-normal.png" height="35" alt="Gurukul text"></a>
+    <ul>
+      <li><a class="nav-link {% block homeactive %} {% endblock homeactive %}" href="/">Home</a></li>
+      <li><a class="nav-link {% block Questionactive %} {% endblock Questionactive %}" href="/question/">Question</a></li>
+      <li><a class="nav-link {% block Videoactive %} {% endblock Videoactive %}" href="#">Video Chat</a></li>
+      {% if user.is_authenticated %}
+      
+      <li class="dropdown"><a href="#"><span><i class="fa fa-user-circle" aria-hidden="true"></i>
+      
+        {{ user.username }}</span> <i class="bi bi-chevron-down"></i></a>
+        <ul>
+          <li>
+          <a class="dropdown-item"  href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile ({{ user.username }})</a>
+          </li>
+          <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a></li>
+          </ul>
+          <li><form method="GET" action="/search" class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right">
+            <input name="query" id="search" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="search" placeholder="Search" aria-label="Search">
+        </form></li>
+    {% else %}
+        <li>
+        <a href="/admin" role= "button" target="_blank" class="link-dark text-decoration-none"><i class="fas fa-user-cog"></i>
+        </a>
+      </li>
+        
+        <li>
+        <a href="/login" class="link-dark text-decoration-none" role= "button"> <i  class="fa fa-sign-in" aria-hidden="true"></i></a>
+        </li>
+        <li>
+        <a href="/signup" class="link-dark text-decoration-none" role= "button" ><i  class="fa fa-user-plus" aria-hidden="true"></i></a>
+        </li>  
+        {% endif %}
+      </ul>
+    <i class="bi bi-list mobile-nav-toggle"></i>
+  </nav><!-- .navbar -->
+
+{% comment %} <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <!-- Container wrapper -->
   <div class="container-fluid">
     <!-- Toggle button -->
@@ -41,13 +96,8 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- Navbar brand -->
       <a class="navbar-brand mt-2 mt-lg-0" href="/">
-        <img src="/static/images/Gurukul.png" height="35" alt="Gurukul Logo"/><img src="https://see.fontimg.com/api/renderfont4/Gg5D/eyJyIjoiZnMiLCJoIjoxMzAsInciOjIwMDAsImZzIjo2NSwiZmdjIjoiIzAwMDAwMCIsImJnYyI6IiNGRkZGRkYiLCJ0IjoxfQ/R3VydWt1bA/samarkan-normal.png" height="35" alt="Gurukul text"></a>
-        {% comment %} <img
-          src="https://cdn.dribbble.com/users/942846/screenshots/3613814/untitled-1.png"
-          height="50"
-          alt="Gurukul Logo"
-          loading="lazy"
-        /> {% endcomment %}
+        <img src="//static/images/Gurukul.png" height="35" alt="Gurukul Logo"/><img src="https://see.fontimg.com/api/renderfont4/Gg5D/eyJyIjoiZnMiLCJoIjoxMzAsInciOjIwMDAsImZzIjo2NSwiZmdjIjoiIzAwMDAwMCIsImJnYyI6IiNGRkZGRkYiLCJ0IjoxfQ/R3VydWt1bA/samarkan-normal.png" height="35" alt="Gurukul text"></a>
+        
       <!-- Left links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
        <li class="nav-item">
@@ -65,18 +115,7 @@
     <!-- Collapsible wrapper -->
 
     {% if user.is_authenticated %}
-    {% comment %} <form method="GET" action="/search" class="d-flex">
-      <input name="query" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-      <button class="btn btn-outline-success" type="submit">
-        Search
-      </button>
-    </form> {% endcomment %}
-    {% comment %} <form method="GET" action="/search" class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right">
-      <input name="query" id="search" class="form-control rounded form-control-sm ml-3 w-75 pull-right border-end-1 border rounded-pill" style="float: right;" type="search" placeholder="Search" aria-label="Search">
-      <button type="submit" class="btn btn-xs btn-light" style="float: right">
-        <span class="fa fa-search"></span>&nbsp;
-      </button>
-    </form> {% endcomment %}
+    
 
     <form method="GET" action="/search" class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right">
         <input name="query" id="search" class="form-control-sm ml-3 w-75 border-end-1 border rounded-pill pull-right" style="float: right;" type="search" placeholder="Search" aria-label="Search">
@@ -86,12 +125,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-user-circle" aria-hidden="true"></i>
-      {% comment %} <img
-        src="https://cdn.iconscout.com/icon/free/png-512/avatar-370-456322.png"
-        class="rounded-circle"
-        height="25"
-        alt="Black and White Portrait of a Man"
-        loading="lazy"> {% endcomment %}
+      
       {{ user.username }}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="position: absolute;  margin-left:-40px">
@@ -104,139 +138,23 @@
 </ul>
 
         {% else %}
-        <!-- Login & Signup Button -->
-        {% comment %}  <a href="/admin" target="_blank" role= "admin" class="btn btn-outline-dark btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
-          Admin
-        </a>
-        <a href="/login" role= "button" class="btn btn-outline-dark btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
-          Login
-        </a>
-        <a href="/signup" role= "button"  class="btn btn-outline-dark btn-rounded mx-2 my-sm-0" data-mdb-ripple-color="dark">
-          Signup
-        </a>{% endcomment %}
+        
         <a href="/admin" role= "button" target="_blank" class="link-dark text-decoration-none"><i class="fas fa-user-cog"></i>
         </a>
         &nbsp;&nbsp;|&nbsp;
-        {% comment %} <a href="/login" role= "button" class="link-dark text-decoration-none">
-          Login
-        </a> {% endcomment %}
+        
         <a href="/login" class="link-dark text-decoration-none" role= "button"> <i  class="fa fa-sign-in" aria-hidden="true"></i></a>
         &nbsp;&nbsp;/&nbsp;&nbsp;
-        {% comment %} <a href="/signup" role= "button" class="link-dark text-decoration-none">
-          Signup
-        </a>  {% endcomment %}
+        
         <a href="/signup" class="link-dark text-decoration-none" role= "button" ><i  class="fa fa-user-plus" aria-hidden="true"></i></a>
         {% endif %}
         
         
       </div>
     </div>
-  </nav>
+  </nav> {% endcomment %}
        
-{% comment %}         
-    <!-- Right elements -->
-    <div class="d-flex align-items-center">
-      <!-- Icon -->
-       <a class="text-reset me-3" href="#">
-        <i class="fas fa-shopping-cart"></i>
-      </a>
 
-      <!-- Notifications -->
-      <a
-        class="text-reset me-3 dropdown-toggle hidden-arrow"
-        href="#"
-        id="navbarDropdownMenuLink"
-        role="button"
-        data-mdb-toggle="dropdown"
-        aria-expanded="false"
-      >
-        <i class="fas fa-bell"></i>
-        <span class="badge rounded-pill badge-notification bg-danger">1</span>
-      </a>
-      <ul
-        class="dropdown-menu dropdown-menu-end"
-        aria-labelledby="navbarDropdownMenuLink"
-      >
-        <li>
-          <a class="dropdown-item" href="#">Some news</a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">Another news</a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </li>
-      </ul>
-
-    </div>
-    <!-- Right elements -->
-  </div>
-  <!-- Container wrapper -->
-</nav>
-<!-- Navbar --> {% endcomment %}
-
-
-  {% comment %} <nav class="navbar navbar-expand-lg navbar-white bg-white">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">Gurukul</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class=" {% block homeactive %} {% endblock homeactive %}" aria-current="page" href="/">Home</a> 
-          </li>
-          <li class="nav-item">
-           <a class="nav-link {% block Questionactive %} {% endblock Questionactive %}" href="question/">Question</a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link {% block Videoactive %} {% endblock Videoactive %}" href="#">Video Chat</a>
-          </li>
-        </ul> {% endcomment %}
-
-        {% comment %} <form method="GET" action="/search" class="d-flex">
-          <input name="query" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-          <button class="btn btn-outline-success" type="submit">
-            Search
-          </button>
-        </form> {% endcomment %}
-        {% comment %} <a href="/admin" target="_blank" role= "admin" class="btn btn-outline-primary mx-2 my-sm-0">
-          Admin
-        </a>
-
-        {% if user.is_authenticated %}
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Welcome {{ user.username }}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/logout">Logout</a>
-            </div>
-          </li>
-        </ul>
-
-        {% else %}
-        <!-- Login & Signup Button -->
-        <a href="/login" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Login</a>
-        <a href="/signup" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Signup</a>
-         {% endcomment %}
-        {% comment %} <button type="button" class="btn btn-success mx-2" data-toggle="modal" data-target="#loginmodal">
-          Log In
-        </button>
-
-
-  <!-- Signup Modal Button -->
-        <button type="button" class="btn btn-success mx-2" data-toggle="modal" data-target="#signupmodal">
-          Sign Up
-        </button> {% endcomment %}
-
-        {% comment %} {% endif %}
-      </nav> {% endcomment %}
-
-  {% comment %} Message {% endcomment %}
   {% for message in messages %}
   <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
     <strong>Message: </strong> {{ message.message }}
@@ -248,83 +166,6 @@
 
   {% endfor %}
 
-{% comment %} 
-
-<!-- Signup Modal -->
-<div class="modal fade" id="signupmodal" tabindex="-1" role="dialog" aria-labelledby="signupmodal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signupmodalTitle">Sign Up</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-        <form action="/signup/" method="POST">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" name="username" required>
-          </div>
-          <div class="form-group">
-            <label for="fname">First Name</label>
-            <input type="text" class="form-control" id="fname" name="fname" required>
-          </div>
-          <div class="form-group">
-            <label for="lname">Last Name</label>
-            <input type="text" class="form-control" id="lname" name="lname" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="pass1" name="pass1" required>
-          </div>
-          <div class="form-group">
-            <label for="password2">Confirm Password</label>
-            <input type="password" class="form-control" id="pass2" name="pass2" required>
-          </div>
-        <button type="submit" class="btn btn-primary my-3">Submit</button>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</div> {% endcomment %}
-
-{% comment %} 
-<!-- Login Modal -->
-<div class="modal fade" id="loginmodal" tabindex="-1" role="dialog" aria-labelledby="loginmodal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginmodalTitle">Log In</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-        <form action="/login/" method="POST">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="loginusername">Username</label>
-            <input type="text" class="form-control" id="loginusername" name="loginusername" required>
-          </div>
-          <div class="form-group">
-            <label for="loginpassword">Password</label>
-            <input type="password" class="form-control" id="loginpassword" name="loginpassword" required>
-          </div>
-        <button type="submit" class="btn btn-primary my-3">Submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> {% endcomment %}
 
   {% block body %} 
   {% endblock body %}
@@ -339,6 +180,12 @@
     crossorigin="anonymous"></script>
 
   <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <script src="/static/vendor/purecounter/purecounter.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="/static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="/static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="/static/js/main.js"></script>
   
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
