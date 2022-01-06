@@ -4,28 +4,67 @@
 {% block Questionactive %} active {% endblock Questionactive %}
 
 {% block body %}
-
-<div class="container my-3">
-    <h2>Asked Questions:</h2>
-
-    {% for post in allposts %}
-
-    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-            <strong class="d-inline-block mb-2 text-primary">Question by: {{post.author}}</strong>
-            <h3 class="mb-0"><a class="text-decoration-none text-dark" href="/question/{{post.slug}}" >{{post.title}}</a></h3>
-            <div class="mb-1 text-muted">{{post.datetime}}</div>
-            <p class="card-text mb-auto">T{{post.content | truncatechars:150}}</p>
-            <div class="my-2">
-                <a href="/question/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
-            </div>
+<div class="wrap">
+    <div class="sidenav">
+        <section id="contact" class="contact">
+        <div class="section-title">
+            <span>Add Question</span>
+            <h2>Add Question</h2>
         </div>
-        <!-- <div class="col-auto d-none d-lg-block">
+
+        <div class="row">
+
+            <div class="question-container">
+                <form action="" method="post" role="form" class="question-form">
+                    
+                        <div class="form-group mt-3 mx-2">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" class="form-control" id="title" required>
+                        </div>
+                    
+                    <div class="form-group mt-3 mx-2">
+                        <label for="slug">Slug</label>
+                        <input type="text" class="form-control" name="slug" id="slug" required>
+                    </div>
+                    <div class="form-group mt-3 mx-2">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" name="description" rows="10" required></textarea>
+                    </div>
+                    <div class="text-center"><button type="submit">Post Question</button></div>
+                    <br>
+                </form>
+            </div>
+
+        </div>
+        </section>
+    </div>
+    <div>
+        <div class="container my-3">
+            <h2>Asked Questions:</h2>
+
+            {% for post in allposts %}
+
+            <div
+                class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Question by: {{post.author}}</strong>
+                    <h3 class="mb-0"><a class="text-decoration-none text-dark"
+                            href="/question/{{post.slug}}">{{post.title}}</a></h3>
+                    <div class="mb-1 text-muted">{{post.datetime}}</div>
+                    <p class="card-text mb-auto">T{{post.content | truncatechars:150}}</p>
+                    <div class="my-2">
+                        <a href="/question/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
+                    </div>
+                </div>
+                <!-- <div class="col-auto d-none d-lg-block">
             <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
           </div> -->
-    </div>
+            </div>
 
-    {% endfor %}
+
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 {% endblock body %}
