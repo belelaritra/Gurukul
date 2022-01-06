@@ -1186,7 +1186,7 @@ section {
   z-index: 1;
   top: 10%;
   right: 0;
-  background-color: rgb(213, 253, 200);
+  background-color: rgb(245, 248, 244);
   overflow-x: hidden;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -1205,7 +1205,8 @@ section {
   color: #f1f1f1;
 }
 .wrap{
-  width: 75%;
+  width: 50%;
+  margin-left: 25%;
 }
 @media screen and (max-width: 600px) {
   .sidenav{
@@ -1216,8 +1217,42 @@ section {
     width: 28%;
     display: none;
   }
+  .sidenavleft{
+    visibility: hidden;
+    clear: both;
+    float: left;
+    margin: 10px auto 5px 20px;
+    width: 28%;
+    display: none;
+  }
   .wrap{
     
     width: 100%;
+    margin-left: 0;
   }
+}
+.sidenavleft {
+  height: 100%;
+  width: 25%;
+  position: fixed;
+  z-index: 1;
+  top: 10%;
+  left: 0;
+  background-color: rgb(245, 248, 244);
+  overflow-x: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  
+}
+
+.sidenavleft a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenavleft a:hover {
+  color: #f1f1f1;
 }
