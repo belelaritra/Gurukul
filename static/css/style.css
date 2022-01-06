@@ -466,7 +466,8 @@ section {
 # Featured Services
 --------------------------------------------------------------*/
 .featured-services {
-  padding: 0;
+  padding: 5%;
+  
 }
 .featured-services .icon-box {
   padding: 20px;

@@ -110,9 +110,6 @@ def handleSignup(request):
             user_obj.first_name = fname
             user_obj.last_name = lname
             user_obj.save()
-            messages.success(
-                request, "Verification Email Has been sent, Please check your mailbox"
-            )
 
             auth_token = str(uuid.uuid4())
             # Create Profile
