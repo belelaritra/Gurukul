@@ -6,38 +6,48 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Account', '0001_initial'),
+        ("Account", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='profile',
-            old_name='stream',
-            new_name='year',
+            model_name="profile",
+            old_name="stream",
+            new_name="year",
         ),
         migrations.AddField(
-            model_name='profile',
-            name='branch',
-            field=models.CharField(choices=[('CSE', 'CSE'), ('ECE', 'ECE'), ('EE', 'EE'), ('IT', 'IT'), ('AEIE', 'AEIE')], default='CSE', max_length=4),
+            model_name="profile",
+            name="branch",
+            field=models.CharField(
+                choices=[
+                    ("CSE", "CSE"),
+                    ("ECE", "ECE"),
+                    ("EE", "EE"),
+                    ("IT", "IT"),
+                    ("AEIE", "AEIE"),
+                ],
+                default="CSE",
+                max_length=4,
+            ),
         ),
         migrations.AddField(
-            model_name='profile',
-            name='email',
-            field=models.EmailField(default='', max_length=100),
+            model_name="profile",
+            name="email",
+            field=models.EmailField(default="", max_length=100),
         ),
         migrations.AddField(
-            model_name='profile',
-            name='fname',
-            field=models.CharField(default='', max_length=100),
+            model_name="profile",
+            name="fname",
+            field=models.CharField(default="", max_length=100),
         ),
         migrations.AddField(
-            model_name='profile',
-            name='lname',
-            field=models.CharField(default='', max_length=100),
+            model_name="profile",
+            name="lname",
+            field=models.CharField(default="", max_length=100),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='roll_number',
-            field=models.CharField(default='', max_length=11),
+            model_name="profile",
+            name="roll_number",
+            field=models.CharField(default="", max_length=11),
         ),
     ]

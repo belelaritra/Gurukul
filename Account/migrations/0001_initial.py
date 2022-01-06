@@ -15,16 +15,30 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('roll_number', models.CharField(default='', max_length=12)),
-                ('phone_number', models.CharField(default='', max_length=10)),
-                ('stream', models.CharField(default='', max_length=4)),
-                ('auth_token', models.CharField(max_length=100)),
-                ('is_verified', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("roll_number", models.CharField(default="", max_length=12)),
+                ("phone_number", models.CharField(default="", max_length=10)),
+                ("stream", models.CharField(default="", max_length=4)),
+                ("auth_token", models.CharField(max_length=100)),
+                ("is_verified", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
