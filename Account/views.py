@@ -150,10 +150,14 @@ def handleSignup(request):
 
 
 def token(request):
+    if request.user.is_authenticated:
+        return redirect("/")
     return render(request, "Account/token.html")
 
 
 def success(request):
+    if request.user.is_authenticated:
+        return redirect("/")
     return render(request, "Account/success.html")
 
 
