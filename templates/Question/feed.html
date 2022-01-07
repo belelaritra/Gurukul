@@ -17,13 +17,21 @@
             <div class="question-container">
                 <form action="/question/uploadquestion" method="POST" role="form" class="question-form">
                     {% csrf_token %}
-                        <div class="form-group mt-3 mx-2">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control" id="title" required>
-                        </div>
-                        
                     <div class="form-group mt-3 mx-2">
-                        <label for="description">Description</label>
+                        <label for="title">Title</label>
+                        <input type="text" name="title" class="form-control" id="title" required>
+                    </div>
+                    <div class="form-group mt-3 mx-2">
+                        <label for="subject">Subject</label>
+                        <select class="form-control" name="subject" id="subject" required>
+                            <option value="">Select Subject</option>
+                            {% for subject in subjects %}
+                                <option value="{{subject}}">{{subject}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group mt-3 mx-2">
+                        <label for="description">Content</label>
                         <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
                     </div>
                     <div class="text-center"><button type="submit">Post Question</button></div>

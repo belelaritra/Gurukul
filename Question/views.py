@@ -16,8 +16,8 @@ def feed(request):
         Question.objects.all()
     )  # .objects --> Get all the objects from the database
     # print(allposts)
-
-    context = {"allposts": allposts}
+    subjects = {"Engineering Mathematics", "Discrete Mathematics", "Programming in C", "Data Structure & Algorithm", "Digital Logic", "Computer Organisation", "Computer Architecture", "Operating System", "Compiler Design", "Database Managment System", "Computer Networks"}
+    context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
 
 
@@ -88,15 +88,17 @@ def uploadquestion(request):
     if request.method == "POST":
         title = request.POST.get("title")
         content = request.POST.get("content")
+        subject = request.POST.get("subject")
         author = request.user
         temp = slugify(title, to_lower=True, separator = '-', max_length = 90)
         slug = str(author.id) + "-" + str(temp)
         timestamp = datetime.now()
-        if title and content and author and slug:
+        if title and content and author and slug and subject:
             try:
                 Question.objects.create(
                     title=title,
                     content=content,
+                    subject=subject,
                     author=author,
                     slug=slug,
                     timestamp=timestamp,
