@@ -81,7 +81,7 @@
                     <h3 class="mb-0"><a class="text-decoration-none text-dark"
                             href="/question/{{post.slug}}">{{post.title}}</a></h3>
                     <div class="mb-1 text-muted">{{post.datetime}}</div>
-                    <p class="card-text mb-auto">T{{post.content | truncatechars:150}}</p>
+                    <p class="card-text mb-auto">{{post.content | truncatechars:150}}</p>
                     <div class="my-2">
                         <a href="/question/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
                     </div>
