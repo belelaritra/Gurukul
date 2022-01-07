@@ -5,6 +5,9 @@ from django.contrib import messages
 from .templatetags import get_dict
 from django.contrib.auth.decorators import login_required
 from .models import Question, Answer
+from django.contrib.auth.models import User
+from datetime import datetime
+from slugify import slugify
 
 # Create your views here.
 @login_required(login_url="/login")
@@ -80,3 +83,26 @@ def comment(request):
             messages.success(request, "Your reply has been posted successfully.")
 
     return redirect(f"/question/{post.slug}")
+
+def uploadquestion(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        author = request.user
+        temp = slugify(title, to_lower=True, separator = '-', max_length = 90)
+        slug = str(author.id) + "-" + str(temp)
+        timestamp = datetime.now()
+        if title and content and author and slug:
+            try:
+                Question.objects.create(
+                    title=title,
+                    content=content,
+                    author=author,
+                    slug=slug,
+                    timestamp=timestamp,
+                )
+                messages.success(request, "Question uploaded successfully")
+
+            except:
+                messages.error(request, "Something went wrong")
+        return redirect("/question")
