@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Library', '0002_auto_20220106_2111'),
+        ("Library", "0002_auto_20220106_2111"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='uploadfiles',
-            name='filetype',
+            model_name="uploadfiles",
+            name="filetype",
         ),
     ]
