@@ -23,15 +23,17 @@ def feed(request):
     ECEsubjects = {"Engineering Mathematics", "Network Signals & Systems", "Electronic Devices", "Analog Circuits", "Digital Circuits", "Control Systems", "Communications", "Electromagnetics"}
     AEIEsubjects = {"Engineering Mathematics", "Electricity and Magnetism", "Electrical Circuits and Machines", "Signals and Systems", "Control Systems", "Analog Electronics", "Digital Electronics","Measurements", "Sensors and Industrial Instrumentation", "Communication and Optical Instrumentation"}
     profile = Profile.objects.filter(user=user).first()
-    if profile.branch == "EE":
-        subjects = EEsubjects
-    elif profile.branch == "ECE":
-        subjects = ECEsubjects
-    elif profile.branch == "AEIE":
-        subjects = AEIEsubjects
+    if not user.is_staff:
+        if profile.branch == "EE":
+            subjects = EEsubjects
+        elif profile.branch == "ECE":
+            subjects = ECEsubjects
+        elif profile.branch == "AEIE":
+            subjects = AEIEsubjects
+        else:
+            subjects = CSEsubjects
     else:
         subjects = CSEsubjects
-
     allposts = allposts.filter(subject__in=subjects)
     context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
