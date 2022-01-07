@@ -108,3 +108,15 @@ def uploadquestion(request):
             except:
                 messages.error(request, "Something went wrong")
         return redirect("/question")
+
+@login_required(login_url="/login")
+def filter(request):
+    query = request.GET["subject"]
+    allposts = Question.objects.filter(
+        subject__icontains=query
+    ) 
+    if allposts.count() == 0:
+        messages.warning(request, "No search results found. Please refine your search.")
+    params = {"allposts": allposts, "query": query}
+    return render(request, "Account/search.html", params)
+    # return HttpResponse('Search')
