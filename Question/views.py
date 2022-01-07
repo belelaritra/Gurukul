@@ -155,6 +155,10 @@ def uploadquestion(request):
         temp = slugify(title, to_lower=True, separator="-", max_length=90)
         slug = str(author.id) + "-" + str(temp)
         timestamp = datetime.now()
+        if Question.objects.filter(slug=slug).exists():
+            slug = slug + "-" + str(timestamp)
+            slug = slugify(slug, to_lower=True, separator="-", max_length=90)
+            
         if title and content and author and slug and subject:
             try:
                 Question.objects.create(
