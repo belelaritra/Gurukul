@@ -209,12 +209,61 @@ def search(request):
         allposts_Content = Question.objects.filter(
             content__icontains=query
         )  # Content contains Query
-
-        allposts = allposts_Title.union(
-            allposts_Content
-        )  # Union --> Get all the objects from the database
+        allposts_Subject = Question.objects.filter(subject__icontains=query)
+        allposts = allposts_Title | allposts_Content | allposts_Subject
+        # Union --> Get all the objects from the database
     if allposts.count() == 0:
         messages.warning(request, "No search results found. Please refine your search.")
     params = {"allposts": allposts, "query": query}
     return render(request, "Account/search.html", params)
     # return HttpResponse('Search')
+
+
+@login_required(login_url="/login")
+def user(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        user = User.objects.filter(username=username).first()
+        if user:
+            profile = Profile.objects.filter(user=user).first()
+            if profile:
+                questions = Question.objects.filter(author=user)
+                answers = Answer.objects.filter(user=user)
+                reply_questions = []
+                for answer in answers:
+                    question = Question.objects.filter(serial_no=answer.post_id).first()
+                    if question not in reply_questions:
+                        reply_questions.append(question)
+                params = {
+                    "user": user,
+                    "profile": profile,
+                    "questions": questions,
+                    "answers": answers,
+                    "reply_questions": reply_questions,
+                }
+                return render(request, "Account/user.html", params)
+    return redirect("/error")
+
+
+@login_required(login_url="/login")
+def profile(request):
+    if request.method == "GET":
+        username = request.GET["username"]
+        user = User.objects.filter(username=username).first()
+        if user:
+            profile = Profile.objects.filter(user=user).first()
+            questions = Question.objects.filter(author=user)
+            answers = Answer.objects.filter(user=user)
+            reply_questions = []
+            for answer in answers:
+                question = Question.objects.filter(serial_no=answer.post_id).first()
+                if question not in reply_questions:
+                    reply_questions.append(question)
+            params = {
+                "user": user,
+                "profile": profile,
+                "questions": questions,
+                "answers": answers,
+                "reply_questions": reply_questions,
+            }
+            return render(request, "Account/profile.html", params)

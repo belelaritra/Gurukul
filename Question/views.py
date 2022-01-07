@@ -178,6 +178,68 @@ def filter(request):
     allposts = Question.objects.filter(subject__icontains=query)
     if allposts.count() == 0:
         messages.warning(request, "No search results found. Please refine your search.")
-    params = {"allposts": allposts, "query": query}
-    return render(request, "Account/search.html", params)
+
+    user = request.user
+    CSEsubjects = {
+        "Engineering Mathematics",
+        "Discrete Mathematics",
+        "Programming in C",
+        "Data Structure & Algorithm",
+        "Digital Logic",
+        "Computer Organisation",
+        "Computer Architecture",
+        "Operating System",
+        "Compiler Design",
+        "Database Managment System",
+        "Computer Networks",
+    }
+    EEsubjects = {
+        "Engineering Mathematics",
+        "Electric Circuits",
+        "Electromagnetic Fields",
+        "Signals and Systems",
+        "Electrical Machines",
+        "Power Systems",
+        "Control Systems",
+        "Electrical and Electronic Measurements",
+        "Analog and Digital Electronics",
+        "Power Electronics",
+    }
+    ECEsubjects = {
+        "Engineering Mathematics",
+        "Network Signals & Systems",
+        "Electronic Devices",
+        "Analog Circuits",
+        "Digital Circuits",
+        "Control Systems",
+        "Communications",
+        "Electromagnetics",
+    }
+    AEIEsubjects = {
+        "Engineering Mathematics",
+        "Electricity and Magnetism",
+        "Electrical Circuits and Machines",
+        "Signals and Systems",
+        "Control Systems",
+        "Analog Electronics",
+        "Digital Electronics",
+        "Measurements",
+        "Sensors and Industrial Instrumentation",
+        "Communication and Optical Instrumentation",
+    }
+    profile = Profile.objects.filter(user=user).first()
+    if not user.is_staff:
+        if profile.branch == "EE":
+            subjects = EEsubjects
+        elif profile.branch == "ECE":
+            subjects = ECEsubjects
+        elif profile.branch == "AEIE":
+            subjects = AEIEsubjects
+        else:
+            subjects = CSEsubjects
+    else:
+        subjects = CSEsubjects
+    allposts = allposts.filter(subject__in=subjects)
+    context = {"allposts": allposts, "subjects": subjects}
+    return render(request, "Question/feed.html", context)
     # return HttpResponse('Search')

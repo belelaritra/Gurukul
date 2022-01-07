@@ -10,4 +10,6 @@ urlpatterns = [
     path("verify/<auth_token>", verify, name="verify"),
     path("error/", error, name="error"),
     path("search/", search, name="search"),
+    path("user", user, name="user"),
+    path("profile/", profile, name="profile"),
 ]

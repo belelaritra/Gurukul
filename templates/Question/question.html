@@ -7,10 +7,16 @@
 
 <div class="container my-3">
   <h2 class="blog-post-title">{{post.title}}</h2>
+  <form method="GET" action="/profile" class="form-inline md-form form-sm mt-0 rounded pull-right">
+    <input hidden name="username" id="username" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="text" value="{{ post.author }}" aria-label="Search">
+        
   <p class="blog-post-meta">
-    {{post.timestamp}} by <a href="#">{{post.author}}</a>
+    {{post.timestamp}} by
+    <button class="btn btn-link btn-sm my-0" type="submit">{{ post.author }}</button>
+    
+    {% comment %} <a href="#">{{post.author}}</a> {% endcomment %}
   </p>
-
+</form>
   <p>{{post.content}}</p>
 </div>
 
@@ -57,7 +63,12 @@
     <div class="col-md-1">
       <img class="rounded mx-auto d-block w-100 p-2" src="/static/images/user.png" width="15px" />  
     </div>
-    <div class="col-md-11"> <b>{{comment.user.first_name}} {{comment.user.last_name}}</b> <small style="color:#808080">@{{comment.user.username}} </small>&nbsp;<span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span><br>
+    <div class="col-md-11">
+      <form method="GET" action="/profile" class="form-inline md-form form-sm mt-0 rounded pull-right">
+        <input hidden name="username" id="username" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="text" value="{{ post.author }}" aria-label="Search">
+        <b>{{comment.user.first_name}} {{comment.user.last_name}}</b> <button class="btn btn-link btn-sm my-0" type="submit">@{{comment.user.username}} </button>&nbsp;<span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span><br>
+      </form>
+
       <div>{{comment.comment}}</div>
       
       {% comment %} Reply {% endcomment %}
@@ -103,8 +114,13 @@
               <div class="col-md-1">
                 <img class="rounded mx-auto d-block w-75 my-2" src="/static/images/user.png" width="15px" />
               </div>
-              <div class="col-md-11"> <b>{{reply.user.first_name}} {{reply.user.last_name}}</b> <small style="color:#808080">@{{reply.user.username}} </small>&nbsp;<span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span>
-              {% comment %} <div class="col-md-11"> <b>{{reply.user.username}}</b>  <span class="badge alert-primary">{{reply.timestamp | naturaltime}} </span> {% endcomment %}
+              <div class="col-md-11"> 
+                <form method="GET" action="/profile" class="form-inline md-form form-sm mt-0 rounded pull-right">
+                  <input hidden name="username" id="username" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="text" value="{{ post.author }}" aria-label="Search">
+                  <b>{{reply.user.first_name}} {{reply.user.last_name}}</b> <button class="btn btn-link btn-sm my-0" type="submit">@{{reply.user.username}} </button>&nbsp;<span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span><br>
+                </form>
+          
+                {% comment %} <div class="col-md-11"> <b>{{reply.user.username}}</b>  <span class="badge alert-primary">{{reply.timestamp | naturaltime}} </span> {% endcomment %}
                 <br>{{reply.comment}}</div>
               {% comment %} <div class="my-2"><b>{{reply.user.username}}</b> <span class="badge alert-primary">{{reply.timestamp | naturaltime}}</span>
                 <br>{{reply.comment}}

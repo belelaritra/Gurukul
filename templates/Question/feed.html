@@ -75,8 +75,13 @@
             <div
                 class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
+                    <form method="GET" action="/profile" class="form-inline md-form form-sm mt-0 rounded pull-right">
+                        <input hidden name="username" id="username" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="text" value="{{ post.author }}" aria-label="Search">
+                        <strong class="d-inline-block mb-2 text-primary">Question by:
+                            <button class="btn btn-link btn-sm my-0" type="submit">{{ post.author }}</button>
+                        </strong>
+                    </form>
                     
-                    <strong class="d-inline-block mb-2 text-primary">Question by: {{post.author}}</strong>
                     <sup><span class="badge alert-primary">{{post.subject}}</span></sup>
                     <h3 class="mb-0"><a class="text-decoration-none text-dark"
                             href="/question/{{post.slug}}">{{post.title}}</a></h3>
