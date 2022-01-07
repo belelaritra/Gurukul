@@ -11,3 +11,4 @@ PASSWORD =
 SECRET_KEY = 
 ```
 3. give the proper values to the variables.
+4. Create a blank `media` folder inside root project directory.
