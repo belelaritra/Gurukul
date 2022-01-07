@@ -15,20 +15,24 @@
         <div class="row">
 
             <div class="question-container">
-                <form action="" method="post" role="form" class="question-form">
-                    
-                        <div class="form-group mt-3 mx-2">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control" id="title" required>
-                        </div>
-                    
+                <form action="/question/uploadquestion" method="POST" role="form" class="question-form">
+                    {% csrf_token %}
                     <div class="form-group mt-3 mx-2">
-                        <label for="slug">Slug</label>
-                        <input type="text" class="form-control" name="slug" id="slug" required>
+                        <label for="title">Title</label>
+                        <input type="text" name="title" class="form-control" id="title" required>
                     </div>
                     <div class="form-group mt-3 mx-2">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" name="description" rows="5" required></textarea>
+                        <label for="subject">Subject</label>
+                        <select class="form-control" name="subject" id="subject" required>
+                            <option value="">Select Subject</option>
+                            {% for subject in subjects %}
+                                <option value="{{subject}}">{{subject}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group mt-3 mx-2">
+                        <label for="description">Content</label>
+                        <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
                     </div>
                     <div class="text-center"><button type="submit">Post Question</button></div>
                     <br>
@@ -48,12 +52,12 @@
         <div class="row">
 
             <div class="question-container">
-                <ul>
-                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo numquam atque exercitationem accusantium totam incidunt obcaecati eaque omnis expedita, sit, modi voluptatem nesciunt sunt facere maxime nobis ad earum delectus!</li>
-                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo numquam atque exercitationem accusantium totam incidunt obcaecati eaque omnis expedita, sit, modi voluptatem nesciunt sunt facere maxime nobis ad earum delectus!</li>
-                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo numquam atque exercitationem accusantium totam incidunt obcaecati eaque omnis expedita, sit, modi voluptatem nesciunt sunt facere maxime nobis ad earum delectus!</li>
-                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo numquam atque exercitationem accusantium totam incidunt obcaecati eaque omnis expedita, sit, modi voluptatem nesciunt sunt facere maxime nobis ad earum delectus!</li>
-                </ul>
+                {% for subject in subjects %}
+                <form method="GET" action="/question/filter" class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right">
+                    <input hidden name="subject" id="subject" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="text" value="{{ subject }}" aria-label="Search">
+                    <button class="btn btn-rounded btn-sm my-0" type="submit">{{ subject }}</button>
+                </form>
+                {% endfor %}
             </div>
 
         </div>
@@ -71,11 +75,13 @@
             <div
                 class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
+                    
                     <strong class="d-inline-block mb-2 text-primary">Question by: {{post.author}}</strong>
+                    <sup><span class="badge alert-primary">{{post.subject}}</span></sup>
                     <h3 class="mb-0"><a class="text-decoration-none text-dark"
                             href="/question/{{post.slug}}">{{post.title}}</a></h3>
                     <div class="mb-1 text-muted">{{post.datetime}}</div>
-                    <p class="card-text mb-auto">T{{post.content | truncatechars:150}}</p>
+                    <p class="card-text mb-auto">{{post.content | truncatechars:150}}</p>
                     <div class="my-2">
                         <a href="/question/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
                     </div>
@@ -84,8 +90,6 @@
             <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
           </div> -->
             </div>
-
-
             {% endfor %}
         </div>
     </div>

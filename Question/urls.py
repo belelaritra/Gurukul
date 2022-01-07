@@ -9,4 +9,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path("", feed, name="feed"),
     path("<str:slug>/", question, name="question"),
+    path("filter", filter, name="filter"),
 ]

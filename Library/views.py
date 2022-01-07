@@ -13,7 +13,11 @@ def Upload(request):
         ISBN = request.POST.get("ISBN")
         bookfile = request.FILES["bookfile"]
         # slug = request.POST.get("slug")
-        image_url = "https://books.google.com/books/content?vid=isbn"+str(ISBN)+"&printsec=frontcover&img=1&zoom=0&edge=curl&source=gbs_api"
+        image_url = (
+            "https://books.google.com/books/content?vid=isbn"
+            + str(ISBN)
+            + "&printsec=frontcover&img=1&zoom=0&edge=curl&source=gbs_api"
+        )
         timestamp = datetime.now()
         if title and author and ISBN and bookfile and image_url:
             try:
@@ -34,9 +38,8 @@ def Upload(request):
     else:
         return render(request, "Library/uploadfiles.html")
 
+
 def feed(request):
-    books = (
-        UploadFiles.objects.all()
-    ) 
+    books = UploadFiles.objects.all()
     context = {"books": books}
     return render(request, "Library/feed.html", context)

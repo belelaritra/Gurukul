@@ -13,6 +13,7 @@ class Question(models.Model):
     content = models.TextField()
     author = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
+    subject = models.CharField(max_length=100, null=True)
     timestamp = models.DateTimeField(blank=True)
 
     # Will show the name of the table in the admin page (not Contact_object)
