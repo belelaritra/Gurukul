@@ -75,14 +75,18 @@
         </div>
         <div class="col-md-4">
             <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center experience"><span>Edit Educational Details</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span></div><br>
-                <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Branch</label><input type="text" class="form-control" placeholder="{{profile.branch}}" value=""></div>
-                    <div class="col-md-6"><label class="labels">Year</label><input type="text" class="form-control" value="" placeholder="{{profile.year}}"></div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12"><label class="labels">Roll Number</label><input type="text" class="form-control" placeholder="{{profile.roll_number}}" value=""></div>
-                </div>
+                <div class="d-flex justify-content-between align-items-center experience"><span>Edit Educational Details</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Edit</span></div><br>
+                <form method="POST" action="/edit_profile" >
+                    {% csrf_token %}
+                    <div class="row mt-2">
+                        <div class="col-md-6"><label class="labels">Branch</label><input type="text" name="branch" id="branch" class="form-control" placeholder="{{profile.branch}}" value=""></div>
+                        <div class="col-md-6"><label class="labels">Year</label><input type="text" name="year" id="year" class="form-control" value="" placeholder="{{profile.year}}"></div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12"><label class="labels">Roll Number</label><input type="text" name="roll_number" id="roll_number" class="form-control" placeholder="{{profile.roll_number}}" value=""></div>
+                    </div>
+                    <button class="btn btn-outline-dark my-3" type="submit">Save Profile</button>
+                </form>
                 {% comment %} <div class="col-md-12"><label class="labels">Experience in Designing</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br>
                 <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div> {% endcomment %}
             </div>
