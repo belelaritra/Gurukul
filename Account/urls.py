@@ -12,4 +12,5 @@ urlpatterns = [
     path("search/", search, name="search"),
     path("user", user, name="user"),
     path("profile/", profile, name="profile"),
+    path("terms/", terms_and_conditions, name="terms"),
 ]

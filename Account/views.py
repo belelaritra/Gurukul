@@ -267,3 +267,6 @@ def profile(request):
                 "reply_questions": reply_questions,
             }
             return render(request, "Account/profile.html", params)
+
+def terms_and_conditions(request):
+    return render(request, "Account/terms_and_conditions.html")
