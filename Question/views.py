@@ -1,5 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
+
+from Account.views import user
 from .models import Question, Answer
 from django.contrib import messages
 from .templatetags import get_dict
@@ -109,13 +111,74 @@ def question(request, slug):
         else:
             reply_Dict[reply.parent.serial_no].append(reply)
 
-    print(reply_Dict)
+    user = request.user
+    CSEsubjects = {
+        "Engineering Mathematics",
+        "Discrete Mathematics",
+        "Programming in C",
+        "Data Structure & Algorithm",
+        "Digital Logic",
+        "Computer Organisation",
+        "Computer Architecture",
+        "Operating System",
+        "Compiler Design",
+        "Database Managment System",
+        "Computer Networks",
+    }
+    EEsubjects = {
+        "Engineering Mathematics",
+        "Electric Circuits",
+        "Electromagnetic Fields",
+        "Signals and Systems",
+        "Electrical Machines",
+        "Power Systems",
+        "Control Systems",
+        "Electrical and Electronic Measurements",
+        "Analog and Digital Electronics",
+        "Power Electronics",
+    }
+    ECEsubjects = {
+        "Engineering Mathematics",
+        "Network Signals & Systems",
+        "Electronic Devices",
+        "Analog Circuits",
+        "Digital Circuits",
+        "Control Systems",
+        "Communications",
+        "Electromagnetics",
+    }
+    AEIEsubjects = {
+        "Engineering Mathematics",
+        "Electricity and Magnetism",
+        "Electrical Circuits and Machines",
+        "Signals and Systems",
+        "Control Systems",
+        "Analog Electronics",
+        "Digital Electronics",
+        "Measurements",
+        "Sensors and Industrial Instrumentation",
+        "Communication and Optical Instrumentation",
+    }
+    profile = Profile.objects.filter(user=user).first()
+    if not user.is_staff:
+        if profile.branch == "EE":
+            subjects = EEsubjects
+        elif profile.branch == "ECE":
+            subjects = ECEsubjects
+        elif profile.branch == "AEIE":
+            subjects = AEIEsubjects
+        else:
+            subjects = CSEsubjects
+    else:
+        subjects = CSEsubjects
+
     context = {
         "post": post,
         "comments": comments,
         "user": request.user,
         "reply_Dict": reply_Dict,
         "reply_count": reply_count,
+        "subjects": subjects,
     }
     return render(request, "Question/question.html", context)
     # return HttpResponse(f'Blog Post : {slug}')
@@ -158,7 +221,7 @@ def uploadquestion(request):
         if Question.objects.filter(slug=slug).exists():
             slug = slug + "-" + str(timestamp)
             slug = slugify(slug, to_lower=True, separator="-", max_length=90)
-            
+
         if title and content and author and slug and subject:
             try:
                 Question.objects.create(
@@ -247,3 +310,113 @@ def filter(request):
     context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
     # return HttpResponse('Search')
+
+
+@login_required(login_url="/login")
+def edit_question(request):
+    if request.method == "POST":
+        title = request.POST["title"]
+        content = request.POST["content"]
+        subject = request.POST["subject"]
+        slug = request.POST["slug"]
+        post = Question.objects.get(slug=slug)
+
+        if title == "":
+            title = post.title
+        if content == "":
+            content = post.content
+        if subject == "":
+            subject = post.subject
+        if title and content and content and slug and subject:
+            try:
+                post.title = title
+                post.content = content
+                post.subject = subject
+                post.timestamp = datetime.now()
+                post.save()
+                messages.success(request, "Question edited successfully")
+
+            except:
+                messages.error(request, "Something went wrong")
+        return redirect("/question/" + str(slug))
+
+
+@login_required(login_url="/login")
+def delete_question(request):
+    if request.method == "POST":
+        slug = request.POST["slug"]
+        post = Question.objects.get(slug=slug)
+        post.delete()
+        messages.success(request, "Question deleted successfully")
+        return redirect("/question")
+
+
+@login_required(login_url="/login")
+def edit_answer(request):
+    if request.method == "POST":
+        comment = request.POST["comment"]
+        post_serial_no = request.POST["post_serial_no"]
+        comment_serial_no = request.POST["comment_serial_no"]
+
+        answer = Answer.objects.get(serial_no=comment_serial_no)
+        post = Question.objects.get(serial_no=post_serial_no)
+
+        if comment == "":
+            comment = answer.comment
+
+        if comment and post and comment_serial_no:
+            try:
+                answer.comment = comment
+                answer.timestamp = datetime.now()
+                answer.save()
+                messages.success(request, "Answer edited successfully")
+            except:
+                messages.error(request, "Something went wrong")
+        return redirect(f"/question/{post.slug}")
+
+
+@login_required(login_url="/login")
+def delete_answer(request):
+    if request.method == "POST":
+        comment_serial_no = request.POST["comment_serial_no"]
+        post_serial_no = request.POST["post_serial_no"]
+        post = Question.objects.get(serial_no=post_serial_no)
+        answer = Answer.objects.get(serial_no=comment_serial_no)
+        answer.delete()
+        messages.success(request, "Answer deleted successfully")
+        return redirect(f"/question/{post.slug}")
+
+
+@login_required(login_url="/login")
+def edit_reply(request):
+    if request.method == "POST":
+        comment = request.POST["reply"]
+        slug = request.POST["slug"]
+        # post_serial_no = request.POST["post_serial_no"]
+        comment_serial_no = request.POST["comment_serial_no"]
+
+        reply = Answer.objects.get(serial_no=comment_serial_no)
+
+        if comment == "":
+            comment = reply.comment
+
+        if comment and comment_serial_no:
+            try:
+                reply.comment = comment
+                reply.timestamp = datetime.now()
+                reply.save()
+                messages.success(request, "Reply edited successfully")
+            except:
+                messages.error(request, "Something went wrong")
+        return redirect(f"/question/{slug}")
+
+
+@login_required(login_url="/login")
+def delete_reply(request):
+    if request.method == "POST":
+        comment_serial_no = request.POST["comment_serial_no"]
+        slug = request.POST["slug"]
+        reply = Answer.objects.get(serial_no=comment_serial_no)
+        reply.delete()
+        messages.success(request, "Reply deleted successfully")
+        return redirect(f"/question/{slug}")

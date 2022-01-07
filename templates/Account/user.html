@@ -2,13 +2,15 @@
 {% block title %} Profile {% endblock title %}
 {% block body %}
 
-
-
-
 <div class="container rounded bg-white mt-5 mb-5">
     <div class="row">
         <div class="col-md-3 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">{{profile.fname}} {{profile.lname}}</span><span class="text-muted">@{{user.username}}</span><span class="text-black-50">{{profile.email}}</span><span> </span></div>
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
+                    width="150px"
+                    src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
+                    class="font-weight-bold">{{profile.fname}} {{profile.lname}}</span><span
+                    class="text-muted">@{{user.username}}</span><span
+                    class="text-black-50">{{profile.email}}</span><span> </span></div>
         </div>
         <div class="col-md-5 border-right">
             <div class="p-3 py-5">
@@ -16,23 +18,19 @@
                     <h4 class="text-right">Basic Details</h4>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="{{profile.fname}}" value="" readonly></div>
-                    <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="{{profile.lname}}" readonly></div>
+                    <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control"
+                            placeholder="{{profile.fname}}" value="" readonly></div>
+                    <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control"
+                            value="" placeholder="{{profile.lname}}" readonly></div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-md-12 "><label class="labels">Username</label><input type="text" class="form-control" placeholder="@{{user.username}}" value="" readonly></div>
-                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="{{profile.phone_number}}" value="" readonly></div>
-                    {% comment %} <div class="col-md-12"><label class="labels">Address Line 1</label><input type="text" class="form-control" placeholder="enter address line 1" value=""></div>
-                    <div class="col-md-12"><label class="labels">Address Line 2</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">Postcode</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">State</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">Area</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div> {% endcomment %}
-                    <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="{{profile.email}}" value="" readonly></div>
+                    <div class="col-md-12 "><label class="labels">Username</label><input type="text"
+                            class="form-control" placeholder="@{{user.username}}" value="" readonly></div>
+                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text"
+                            class="form-control" placeholder="{{profile.phone_number}}" value="" readonly></div>
+                    <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control"
+                            placeholder="{{profile.email}}" value="" readonly></div>
                 </div>
-
-                {% comment %} <div class="d-flex justify-content-between align-items-center mb-3 my-5">
-                    <h4 class="text-right">Asked Questions: </h4>
-                </div> {% endcomment %}
 
                 <div class="overflow-auto my-5">
                     <div class="row mt-2">
@@ -40,11 +38,11 @@
                             <h4 class="text-right">Asked Questions: ({{ questions|length }})</h4>
                             <ol>
                                 {% for question in questions %}
-                                    <li>
-                                        <a class="text-decoration-none text-blue"
-                                    href="/question/{{question.slug}}">{{question.title}}
-                                        </a>
-                                    </li>
+                                <li>
+                                    <a class="text-decoration-none text-blue"
+                                        href="/question/{{question.slug}}">{{question.title}}
+                                    </a>
+                                </li>
                                 {% endfor %}
                             </ol>
                         </div>
@@ -52,43 +50,50 @@
                             <h4 class="text-right">Answers: ({{ answers|length }})</h4>
                             <ol>
                                 {% for reply_question in reply_questions %}
-                                    <li>
-                                        Question : <a class="text-decoration-none text-blue"
-                                    href="/question/{{reply_question.slug}}">{{reply_question.title}}
-                                        </a>
-                                    </li>
+                                <li>
+                                    Question : <a class="text-decoration-none text-blue"
+                                        href="/question/{{reply_question.slug}}">{{reply_question.title}}
+                                    </a>
+                                </li>
                                 {% endfor %}
                             </ol>
                         </div>
                     </div>
                 </div>
-                    
-                {% comment %} <div class="col-md-12"><label class="labels">Education</label><input type="text" class="form-control" placeholder="education" value=""></div> {% endcomment %}
-               
-                {% comment %} <div class="row mt-3">
-                    <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
-                    <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
-                </div> {% endcomment %}
-                
-                {% comment %} <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Save Profile</button></div> {% endcomment %}
+
             </div>
         </div>
         <div class="col-md-4">
             <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center experience"><span>Edit Educational Details</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Edit</span></div><br>
-                <form method="POST" action="/edit_profile" >
+                <div class="d-flex justify-content-between align-items-center experience"><span>Edit Educational
+                        Details</span><span class="border px-3 p-1 add-experience"><i
+                            class="fa fa-plus"></i>&nbsp;Edit</span></div><br>
+                <form method="POST" action="/edit_profile">
                     {% csrf_token %}
                     <div class="row mt-2">
-                        <div class="col-md-6"><label class="labels">Branch</label><input type="text" name="branch" id="branch" class="form-control" placeholder="{{profile.branch}}" value=""></div>
-                        <div class="col-md-6"><label class="labels">Year</label><input type="text" name="year" id="year" class="form-control" value="" placeholder="{{profile.year}}"></div>
+                        <div class="col-md-6"><label class="labels">Branch</label>
+                            <select class="form-control text-muted" style="color: grey;" name="branch">
+                                <option value="{{profile.branch}}" hidden>{{profile.branch}}</option>
+                                <option value="CSE">CSE</option>
+                                <option value="IT">IT</option>
+                                <option value="ECE">ECE</option>
+                                <option value="EE">EE</option>
+                                <option value="AEIE">AEIE</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6"><label class="labels">Year</label>
+                            <input type="number" name="year" id="year" class="form-control"
+                                placeholder="{{profile.year}}" min="1990" max="2022" maxlength="4" minlength="4">
+                        </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-12"><label class="labels">Roll Number</label><input type="text" name="roll_number" id="roll_number" class="form-control" placeholder="{{profile.roll_number}}" value=""></div>
+                        <div class="col-md-12"><label class="labels">Roll Number</label>
+                            <input type="text" name="roll_number" id="roll_number" class="form-control"
+                                placeholder="{{profile.roll_number}}" maxlength="12">
+                        </div>
                     </div>
                     <button class="btn btn-outline-dark my-3" type="submit">Save Profile</button>
                 </form>
-                {% comment %} <div class="col-md-12"><label class="labels">Experience in Designing</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br>
-                <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div> {% endcomment %}
             </div>
         </div>
     </div>

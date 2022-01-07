@@ -39,6 +39,7 @@ def Upload(request):
     else:
         return render(request, "Library/uploadfiles.html")
 
+
 @login_required(login_url="/login")
 def feed(request):
     books = UploadFiles.objects.all()

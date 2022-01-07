@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, user_passes_test 
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -17,7 +17,7 @@ def home(request):
 
 def handleLogin(request):
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect("/")
     else:
         if request.method == "POST":
             # email=request.POST.get('email')
@@ -33,7 +33,8 @@ def handleLogin(request):
                 profile_obj = Profile.objects.filter(user=user_obj).first()
                 if not profile_obj.is_verified:
                     messages.error(
-                        request, "Your account is not verified. Please check your mailbox"
+                        request,
+                        "Your account is not verified. Please check your mailbox",
                     )
                     return redirect("/login")
 
@@ -51,7 +52,7 @@ def handleLogin(request):
 
 def handleSignup(request):
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect("/")
     else:
         if request.method == "POST":
             username = request.POST["username"]
@@ -190,7 +191,7 @@ def error(request):
     return render(request, "Account/error.html")
 
 
-@login_required(login_url='/login')
+@login_required(login_url="/login")
 def handleLogout(request):
     # With Proper Authentication
     if request.method == "GET":
@@ -274,8 +275,10 @@ def profile(request):
             }
             return render(request, "Account/profile.html", params)
 
+
 def terms_and_conditions(request):
     return render(request, "Account/terms_and_conditions.html")
+
 
 @login_required(login_url="/login")
 def edit_profile(request):
@@ -285,7 +288,7 @@ def edit_profile(request):
         branch = request.POST["branch"]
         year = request.POST["year"]
         user_id = user_obj.id
-        
+
         if Profile.objects.filter(roll_number=roll_number).exists():
             messages.warning(request, "Roll Number already exists")
             return redirect("/profile")
@@ -308,4 +311,4 @@ def edit_profile(request):
         profile_obj.year = year
         profile_obj.save()
         messages.success(request, "Profile updated successfully")
-        return redirect("/profile/?username="+str(user_obj.username))
+        return redirect("/profile/?username=" + str(user_obj.username))
