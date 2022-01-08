@@ -5,94 +5,151 @@
 
 {% block body %}
 <div class="wrap">
-    <div class="sidenav">
-        <section id="contact" class="contact">
-        <div class="section-title">
-            <span>Add Question</span>
-            <h2>Add Question</h2>
-        </div>
+  <div class="sidenav">
+    <section id="contact" class="contact">
+      <div class="section-title">
+        <span>Add Question</span>
+        <h2>Add Question</h2>
+      </div>
 
-        <div class="row">
-
-            <div class="question-container">
-                <form action="/question/uploadquestion" method="POST" role="form" class="question-form">
-                    {% csrf_token %}
-                    <div class="form-group mt-3 mx-2">
-                        <label for="title">Title</label>
-                        <input type="text" name="title" class="form-control" id="title" required>
-                    </div>
-                    <div class="form-group mt-3 mx-2">
-                        <label for="subject">Subject</label>
-                        <select class="form-control" name="subject" id="subject" required>
-                            <option value="">Select Subject</option>
-                            {% for subject in subjects %}
-                                <option value="{{subject}}">{{subject}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group mt-3 mx-2">
-                        <label for="description">Content</label>
-                        <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
-                    </div>
-                    <div class="text-center"><button type="submit">Post Question</button></div>
-                    <br>
-                </form>
+      <div class="row">
+        <div class="question-container">
+          <form
+            action="/question/uploadquestion"
+            method="POST"
+            role="form"
+            class="question-form"
+          >
+            {% csrf_token %}
+            <div class="form-group mt-3 mx-2">
+              <label for="title">Title</label>
+              <input
+                type="text"
+                name="title"
+                class="form-control"
+                id="title"
+                required
+              />
             </div>
-
-        </div>
-        </section>
-    </div>
-    <div class="sidenavleft">
-        <section id="contact" class="contact">
-        <div class="section-title">
-            <span>More</span>
-            <h2>Topics</h2>
-        </div>
-
-        <div class="row">
-
-            <div class="question-container">
+            <div class="form-group mt-3 mx-2">
+              <label for="subject">Subject</label>
+              <select class="form-control" name="subject" id="subject" required>
+                <option value="">Select Subject</option>
                 {% for subject in subjects %}
-                <form method="GET" action="/question/filter" class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right">
-                    <input hidden name="subject" id="subject" class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right" type="text" value="{{ subject }}" aria-label="Search">
-                    <button class="btn btn-rounded btn-sm my-0" type="submit">{{ subject }}</button>
-                </form>
+                <option value="{{subject}}">{{subject}}</option>
                 {% endfor %}
+              </select>
             </div>
-
+            <div class="form-group mt-3 mx-2">
+              <label for="description">Content</label>
+              <textarea
+                class="form-control"
+                name="content"
+                id="content"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+            <div class="text-center">
+              <button type="submit">Post Question</button>
+            </div>
+            <br />
+          </form>
         </div>
-        </section>
-    </div>
-    <div>
-        <div class="container my-3">
-            <div class="section-title">
-                <span>Questions</span>
-                <h2>Asked Questions</h2>
-            </div>
+      </div>
+    </section>
+  </div>
+  <div class="sidenavleft">
+    <section id="contact" class="contact">
+      <div class="section-title">
+        <span>More</span>
+        <h2>Topics</h2>
+      </div>
 
-            {% for post in allposts %}
-
-            <div
-                class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    
-                    <strong class="d-inline-block mb-2 text-primary">Question by: {{post.author}}</strong>
-                    <sup><span class="badge alert-primary">{{post.subject}}</span></sup>
-                    <h3 class="mb-0"><a class="text-decoration-none text-dark"
-                            href="/question/{{post.slug}}">{{post.title}}</a></h3>
-                    <div class="mb-1 text-muted">{{post.datetime}}</div>
-                    <p class="card-text mb-auto">{{post.content | truncatechars:150}}</p>
-                    <div class="my-2">
-                        <a href="/question/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
-                    </div>
-                </div>
-                <!-- <div class="col-auto d-none d-lg-block">
-            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-          </div> -->
-            </div>
-            {% endfor %}
+      <div class="row">
+        <div class="question-container">
+          {% for subject in subjects %}
+          <form
+            method="GET"
+            action="/question/filter"
+            class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right"
+          >
+            <input
+              hidden
+              name="subject"
+              id="subject"
+              class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+              type="text"
+              value="{{ subject }}"
+              aria-label="Search"
+            />
+            <button class="btn btn-rounded btn-sm my-0" type="submit">
+              {{ subject }}
+            </button>
+          </form>
+          {% endfor %}
         </div>
+      </div>
+    </section>
+  </div>
+  <div>
+    <div class="container my-3">
+      <div class="section-title">
+        <span>Questions</span>
+        <h2>Asked Questions</h2>
+      </div>
+
+      {% for post in allposts %}
+
+      <div
+        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative"
+      >
+        <div class="col p-4 d-flex flex-column position-static">
+          <form
+            method="GET"
+            action="/profile"
+            class="form-inline md-form form-sm mt-0 rounded pull-right"
+          >
+            <input
+              hidden
+              name="username"
+              id="username"
+              class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+              type="text"
+              value="{{ post.author }}"
+              aria-label="Search"
+            />
+            <strong class="d-inline-block mb-2 text-primary"
+              >Question by:
+              <button class="btn btn-link btn-sm my-0" type="submit">
+                {{ post.author }}
+              </button>
+            </strong>
+          </form>
+
+          <sup><span class="badge alert-primary">{{post.subject}}</span></sup>
+          <h3 class="mb-0">
+            <a
+              class="text-decoration-none text-dark"
+              href="/question/{{post.slug}}"
+              >{{post.title}}</a
+            >
+          </h3>
+          <div class="mb-1 text-muted">{{post.datetime}}</div>
+          <p class="card-text mb-auto">{{post.content | truncatechars:150}}</p>
+          <div class="my-2">
+            <a
+              href="/question/{{post.slug}}"
+              role="button"
+              class="btn btn-primary"
+              >Continue reading</a
+            >
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </div>
 
 {% endblock body %}

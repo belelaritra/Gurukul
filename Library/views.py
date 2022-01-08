@@ -6,6 +6,7 @@ from .models import UploadFiles
 from datetime import datetime
 
 # Create your views here.
+@login_required(login_url="/login")
 def Upload(request):
     if request.method == "POST":
         title = request.POST.get("title")
@@ -39,6 +40,7 @@ def Upload(request):
         return render(request, "Library/uploadfiles.html")
 
 
+@login_required(login_url="/login")
 def feed(request):
     books = UploadFiles.objects.all()
     context = {"books": books}
