@@ -25,7 +25,7 @@
     <p class="blog-post-meta">
       {{post.timestamp}} by
       <button class="btn btn-link btn-sm my-0" type="submit">
-        {{ post.author }}
+        @{{ post.author }}
       </button>
     </p>
   </form>
@@ -211,7 +211,7 @@
           id="username"
           class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
           type="text"
-          value="{{ post.author }}"
+          value="{{ comment.user.username }}"
           aria-label="Search"
         />
         <b>{{comment.user.first_name}} {{comment.user.last_name}}</b>
@@ -451,7 +451,7 @@
                   id="username"
                   class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
                   type="text"
-                  value="{{ post.author }}"
+                  value="{{ reply.user.username }}"
                   aria-label="Search"
                 />
                 <b>{{reply.user.first_name}} {{reply.user.last_name}}</b>

@@ -12,6 +12,8 @@ from datetime import datetime
 from slugify import slugify
 from Account.models import Profile
 
+from better_profanity import profanity
+
 # Create your views here.
 @login_required(login_url="/login")
 def feed(request):
@@ -186,6 +188,8 @@ def question(request, slug):
 
 @login_required(login_url="/login")
 def comment(request):
+    profanity.load_censor_words()
+
     if request.method == "POST":
         comment = request.POST.get("comment")
         user = request.user
@@ -194,6 +198,8 @@ def comment(request):
         parent_serial_no = request.POST.get("parent_serial_no")
 
         post = Question.objects.filter(serial_no=post_serial_no).first()
+
+        comment = profanity.censor(comment)
 
         if parent_serial_no == "":
             comment = Answer(comment=comment, user=user, post=post)
@@ -210,11 +216,17 @@ def comment(request):
 
 
 def uploadquestion(request):
+    profanity.load_censor_words()
+
     if request.method == "POST":
         title = request.POST.get("title")
         content = request.POST.get("content")
         subject = request.POST.get("subject")
         author = request.user
+
+        title = profanity.censor(title)
+        content = profanity.censor(content)
+
         temp = slugify(title, to_lower=True, separator="-", max_length=90)
         slug = str(author.id) + "-" + str(temp)
         timestamp = datetime.now()
@@ -314,12 +326,17 @@ def filter(request):
 
 @login_required(login_url="/login")
 def edit_question(request):
+    profanity.load_censor_words()
+
     if request.method == "POST":
         title = request.POST["title"]
         content = request.POST["content"]
         subject = request.POST["subject"]
         slug = request.POST["slug"]
         post = Question.objects.get(slug=slug)
+
+        title = profanity.censor(title)
+        content = profanity.censor(content)
 
         if title == "":
             title = post.title
@@ -353,6 +370,8 @@ def delete_question(request):
 
 @login_required(login_url="/login")
 def edit_answer(request):
+    profanity.load_censor_words()
+
     if request.method == "POST":
         comment = request.POST["comment"]
         post_serial_no = request.POST["post_serial_no"]
@@ -360,6 +379,8 @@ def edit_answer(request):
 
         answer = Answer.objects.get(serial_no=comment_serial_no)
         post = Question.objects.get(serial_no=post_serial_no)
+
+        comment = profanity.censor(comment)
 
         if comment == "":
             comment = answer.comment
@@ -389,6 +410,8 @@ def delete_answer(request):
 
 @login_required(login_url="/login")
 def edit_reply(request):
+    profanity.load_censor_words()
+
     if request.method == "POST":
         comment = request.POST["reply"]
         slug = request.POST["slug"]
@@ -397,6 +420,8 @@ def edit_reply(request):
 
         reply = Answer.objects.get(serial_no=comment_serial_no)
 
+        comment = profanity.censor(comment)
+        
         if comment == "":
             comment = reply.comment
 
