@@ -9,10 +9,18 @@ from django.core.mail import send_mail
 from .models import *
 from Question.models import *
 import uuid
+import requests
 
 # Create your views here.
 def home(request):
-    return render(request, "Account/home.html")
+    URL = "https://zenquotes.io?api=random"
+    r = requests.get(url = URL)
+    data = r.json()
+    context = {
+        'quote': data[0]['q'],
+        'author': data[0]['a']
+    }
+    return render(request, 'Account/home.html', context)
 
 
 def handleLogin(request):
