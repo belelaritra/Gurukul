@@ -99,7 +99,7 @@
           <form
             method="GET"
             action="/search"
-            class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right"
+            class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
           >
             <input
               name="query"
@@ -109,6 +109,9 @@
               placeholder="Search"
               aria-label="Search"
             />
+            <button class="btn btn-sm btn-outline-success" type="submit">
+              Search
+            </button>
           </form>
         </li>
 
@@ -126,7 +129,7 @@
               <form
                 method="POST"
                 action="/user"
-                class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right"
+                class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
               >
                 {% csrf_token %}
                 <input
