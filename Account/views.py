@@ -11,6 +11,7 @@ from Question.models import *
 import uuid
 import requests
 from better_profanity import profanity
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def home(request):
@@ -350,7 +351,7 @@ def change_safe_mode(request):
         if profile_obj.safe_mode:
             profile_obj.safe_mode = False
             profile_obj.save()
-            messages.success(request, "Safe mode disabled")
+            messages.warning(request, "Safe mode disabled")
         else:
             profile_obj.safe_mode = True
             profile_obj.save()
@@ -360,3 +361,24 @@ def change_safe_mode(request):
         # profile_obj.save()
         # messages.success(request, "Safe Mode updated successfully")
         return redirect("/profile/?username=" + str(user_obj.username))
+
+@login_required(login_url="/login")
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST["old_password"]
+        new_password = request.POST["new_password"]
+        confirm_password = request.POST["confirm_password"]
+        user = request.user
+        if user.check_password(old_password):
+            if new_password == confirm_password:
+                if len(new_password) < 5:
+                    messages.error(request, "Password is too short")
+                    return redirect("/profile/?username=" + str(user.username))
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, "Password changed successfully")
+            else:
+                messages.error(request, "Password did not match")
+        else:
+            messages.error(request, "Wrong password")
+        return redirect("/logout")
