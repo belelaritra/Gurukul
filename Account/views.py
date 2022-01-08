@@ -278,6 +278,7 @@ def profile(request):
                 "reply_questions": reply_questions,
             }
             return render(request, "Account/profile.html", params)
+    return redirect("/error")
 
 
 def terms_and_conditions(request):
