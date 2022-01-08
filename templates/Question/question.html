@@ -4,7 +4,7 @@
 {% block body %}
 {% load humanize %}
 {% load get_dict %}
-
+{% load markdown_extras %}
 <div class="container my-3">
   <h2 class="blog-post-title">{{post.title}}</h2>
   <form
@@ -29,7 +29,7 @@
       </button>
     </p>
   </form>
-  <p>{{post.content}}</p>
+  {{ post.content | markdown | safe }}
 
   {% if request.user.username == post.author%}
   <a
@@ -221,8 +221,7 @@
           >{{comment.timestamp | naturaltime }} </span
         ><br />
       </form>
-
-      <div>{{comment.comment}}</div>
+      <div>{{comment.comment | markdown | safe}}</div>
 
       <div class="reply mx-0">
         {% if reply_count|get_dict:comment.serial_no %}
@@ -462,7 +461,7 @@
                 ><br />
               </form>
 
-              <br />{{reply.comment}}
+              <br />{{reply.comment | markdown | safe}}
             </div>
           </div>
           {% if request.user.username == reply.user.username %}
