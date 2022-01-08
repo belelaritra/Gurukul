@@ -38,11 +38,15 @@
   <p class="blog-post-meta">
     {{post.timestamp}} by
     <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+    {% if post.edited %}
+    <span class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </span>
+    {% endif %}
   </p>
 
   {{ post.content | markdown | safe }}
 </div>
 
+{% comment %} ==================================================== Edit Delete {% endcomment %}
 {% if request.user.username == post.author%}
 <div class="container">
   <a
@@ -50,7 +54,7 @@
     class="btn btn-white btn-sm btn-rounded mb-4"
     data-toggle="modal"
     data-target="#modalEditQuestion"
-    ><i class="fas fa-edit"></i></a
+    ><i class="fas fa-edit"></i>&nbsp;Edit</a
   >
 
   <div
@@ -124,7 +128,7 @@
     class="btn btn-white btn-sm btn-rounded mb-4"
     data-toggle="modal"
     data-target="#modaldeleteQuestion"
-    ><i class="fa fa-trash" aria-hidden="true"></i></a
+    ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
   >
 
   <div
@@ -166,7 +170,8 @@
     </div>
   </div>
   {% endif %}
-  
+
+  {% comment %} ==================================================== Comments ============================================== {% endcomment %}
 <div class="container">
   <h2>Answers ({{comments.count}})</h2>
   {% if user.is_anonymous %}
@@ -200,7 +205,7 @@
       id="post_serial_no"
       value="{{post.serial_no}}"
     />
-    <button type="submit" class="btn btn-primary my-3">Submit</button>
+    <button type="submit" class="btn btn-primary my-3"><i class="fa fa-comments"></i>&nbsp;Add</button>
   </form>
 
   {% for comment in comments %}
@@ -232,15 +237,20 @@
         <button class="btn btn-link btn-sm my-0" type="submit">
           @{{comment.user.username}}</button
         >&nbsp;<span class="badge alert-primary"
-          >{{comment.timestamp | naturaltime }} </span
-        ><br />
+          >{{comment.timestamp | naturaltime }} </span>
+          
+          {% if comment.edited %}
+          <span class="badge alert-white text-muted">(Edited) {{comment.edited_timestamp | naturaltime }} </span>
+          {% endif %}
+
+          <br />
       </form>
       <div>{{comment.comment | markdown | safe}}</div>
 
       <div class="reply mx-0">
         {% if reply_count|get_dict:comment.serial_no %}
         <button
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-white"
           type="button"
           data-toggle="collapse"
           data-target="#view_replies_{{comment.serial_no}}"
@@ -248,11 +258,11 @@
           aria-expanded="false"
           aria-controls="view_replies_{{comment.serial_no}}"
         >
-          View Replies ({{reply_count|get_dict:comment.serial_no}})
+        <i class="fas fa-eye"></i>&nbsp;View Replies ({{reply_count|get_dict:comment.serial_no}})
         </button>
         {% else %}
         <button
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-white"
           type="button"
           data-toggle="collapse"
           data-target="#view_replies_{{comment.serial_no}}"
@@ -264,24 +274,23 @@
         </button>
         {% endif %}
         <button
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-white"
           type="button"
           data-toggle="collapse"
           data-target="#replyBox_{{comment.serial_no}}"
           aria-expanded="false"
           aria-controls="replyBox_{{comment.serial_no}}"
         >
-          Reply
+        <i class="fa fa-reply"></i>&nbsp;Reply
         </button>
 
         {% if request.user.username == comment.user.username %}
 
         <a
           href=""
-          class="btn btn-warning btn-sm btn-rounded mb-4"
+          class="btn btn-white btn-sm btn-rounded mb-4"
           data-toggle="modal"
-          data-target="#modalEditAnswer"
-          >Edit</a
+          data-target="#modalEditAnswer"><i class="fas fa-edit"></i>&nbsp;Edit</a
         >
 
         <div
@@ -347,10 +356,10 @@
 
         <a
           href=""
-          class="btn btn-danger btn-sm btn-rounded mb-4"
+          class="btn btn-white btn-sm btn-rounded mb-4"
           data-toggle="modal"
           data-target="#modaldeleteAnswer"
-          >Delete</a
+          ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
         >
 
         <div
@@ -473,21 +482,25 @@
                 <button class="btn btn-link btn-sm my-0" type="submit">
                   @{{reply.user.username}}</button
                 >&nbsp;<span class="badge alert-primary"
-                  >{{reply.timestamp | naturaltime }} </span
-                ><br />
+                  >{{reply.timestamp | naturaltime }} </span>
+                  {% if reply.edited %}
+                  <span class="badge alert-white text-muted">(Edited) {{reply.edited_timestamp | naturaltime }} </span>
+                  {% endif %}
+
+                  <br />
               </form>
 
-              <br />{{reply.comment | markdown | safe}}
+              {{reply.comment | markdown | safe}}
             </div>
           </div>
           {% if request.user.username == reply.user.username %}
 
           <a
             href=""
-            class="btn btn-warning btn-sm btn-rounded mb-4"
+            class="btn btn-white btn-sm btn-rounded mb-4"
             data-toggle="modal"
             data-target="#modalEditReply"
-            >Edit</a
+            ><i class="fas fa-edit"></i>&nbsp;Edit</a
           >
 
           <div
@@ -555,10 +568,10 @@
 
           <a
             href=""
-            class="btn btn-danger btn-sm btn-rounded mb-4"
+            class="btn btn-white btn-sm btn-rounded mb-4"
             data-toggle="modal"
             data-target="#modaldeleteReply"
-            >Delete</a
+            ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
           >
 
           <div

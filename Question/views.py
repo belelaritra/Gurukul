@@ -372,7 +372,8 @@ def edit_question(request):
                 post.title = title
                 post.content = content
                 post.subject = subject
-                post.timestamp = datetime.now()
+                post.edited_timestamp = datetime.now()
+                post.edited = True
                 post.save()
                 messages.success(request, "Question edited successfully")
 
@@ -411,7 +412,8 @@ def edit_answer(request):
         if comment and post and comment_serial_no:
             try:
                 answer.comment = comment
-                answer.timestamp = datetime.now()
+                answer.edited_timestamp = datetime.now()
+                answer.edited = True
                 answer.save()
                 messages.success(request, "Answer edited successfully")
             except:
@@ -451,7 +453,8 @@ def edit_reply(request):
         if comment and comment_serial_no:
             try:
                 reply.comment = comment
-                reply.timestamp = datetime.now()
+                reply.edited_timestamp = datetime.now()
+                reply.edited = True
                 reply.save()
                 messages.success(request, "Reply edited successfully")
             except:
