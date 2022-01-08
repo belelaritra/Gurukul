@@ -5,9 +5,9 @@
 {% load humanize %}
 {% load get_dict %}
 {% load markdown_extras %}
-<div class="container my-3">
-  <h2 class="blog-post-title">{{post.title}}</h2>
-  <form
+
+
+  {% comment %} <form
     method="GET"
     action="/profile"
     class="form-inline md-form form-sm mt-0 rounded pull-right"
@@ -20,24 +20,37 @@
       type="text"
       value="{{ post.author }}"
       aria-label="Search"
-    />
-
-    <p class="blog-post-meta">
-      {{post.timestamp}} by
-      <button class="btn btn-link btn-sm my-0" type="submit">
+    /> 
+     <button class="btn btn-link btn-sm my-0" type="submit">
         @{{ post.author }}
-      </button>
-    </p>
-  </form>
-  {{ post.content | markdown | safe }}
+      </button> 
+      </form>
+      {% endcomment %}
 
-  {% if request.user.username == post.author%}
+ 
+<div class="container my-3">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 class="blog-post-title">{{post.title}}</h2>    
+    </div>
+  </div> 
+
+  <p class="blog-post-meta">
+    {{post.timestamp}} by
+    <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+  </p>
+
+  {{ post.content | markdown | safe }}
+</div>
+
+{% if request.user.username == post.author%}
+<div class="container">
   <a
     href=""
-    class="btn btn-warning btn-sm btn-rounded mb-4"
+    class="btn btn-white btn-sm btn-rounded mb-4"
     data-toggle="modal"
     data-target="#modalEditQuestion"
-    >Edit</a
+    ><i class="fas fa-edit"></i></a
   >
 
   <div
@@ -74,7 +87,6 @@
               <label for="title">Title</label>
               <input type="text" name="title" class="form-control" id="title" />
             </div>
-
             <div class="md-form mb-4">
               <label for="subject">Subject</label>
               <select class="form-control" name="subject" id="subject">
@@ -91,6 +103,8 @@
                 class="form-control"
                 name="content"
                 id="content"
+                onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+                placeholder="# : Headings&#10;* : Italic&#10;** : Bold&#10;> : Blockquote&#10;``` : Code&#10;1. : Ordered List&#10;- : Unordered List&#10;- [x] : Task List&#10;--- : Horizontal Rule&#10;[...](...) : Link&#10;![...](...) : Image&#10;"
                 rows="5"
               ></textarea>
             </div>
@@ -107,10 +121,10 @@
 
   <a
     href=""
-    class="btn btn-danger btn-sm btn-rounded mb-4"
+    class="btn btn-white btn-sm btn-rounded mb-4"
     data-toggle="modal"
     data-target="#modaldeleteQuestion"
-    >Delete</a
+    ><i class="fa fa-trash" aria-hidden="true"></i></a
   >
 
   <div
@@ -152,8 +166,7 @@
     </div>
   </div>
   {% endif %}
-</div>
-
+  
 <div class="container">
   <h2>Answers ({{comments.count}})</h2>
   {% if user.is_anonymous %}
@@ -171,6 +184,7 @@
         name="comment"
         id="comment"
         aria-describedby="emailHelp"
+        onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
         placeholder="Your Answer"
       ></textarea>
     </div>
@@ -305,6 +319,7 @@
                     class="form-control"
                     name="comment"
                     id="comment"
+                    onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                     rows="3"
                   ></textarea>
                 </div>
@@ -404,6 +419,7 @@
                   name="comment"
                   id="comment"
                   aria-describedby="emailHelp"
+                  onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                   placeholder="Your Reply"
                 ></textarea>
                 <input
@@ -509,6 +525,7 @@
                       class="form-control"
                       name="reply"
                       id="reply"
+                      onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                       rows="3"
                     ></textarea>
                   </div>
