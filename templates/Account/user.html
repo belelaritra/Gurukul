@@ -65,6 +65,25 @@
         </div>
         <div class="col-md-4">
             <div class="p-3 py-5">
+                                <!-- Default switch --> 
+               <div class="form-check form-switch">             
+                <div style="float: left">
+                    <strong>Safe Mode</strong>
+                </div>
+                {% if profile.safe_mode %}
+                <form method="POST" action="/change_safe_mode" id="safe_mode_form1" style="float: right">
+                    {% csrf_token %}
+                <input class="form-check-input" type="checkbox" id="safe_mode1" name="safe_mode" onclick="safe_mode_func1(event)" checked> 
+                </form>
+
+                {% else %}
+                <form method="POST" action="/change_safe_mode" id="safe_mode_form2" style="float: right">
+                    {% csrf_token %}
+                <input class="form-check-input" type="checkbox" id="safe_mode2" name="safe_mode" onclick="safe_mode_func2(event)"> 
+                </form>
+                {% endif %}
+            </div> 
+            <br>
                 <div class="d-flex justify-content-between align-items-center experience"><span>Edit Educational
                         Details</span><span class="border px-3 p-1 add-experience"><i
                             class="fa fa-plus"></i>&nbsp;Edit</span></div><br>

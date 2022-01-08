@@ -70,6 +70,7 @@ def feed(request):
         "Communication and Optical Instrumentation",
     }
     profile = Profile.objects.filter(user=user).first()
+
     if not user.is_staff:
         if profile.branch == "EE":
             subjects = EEsubjects
@@ -82,6 +83,13 @@ def feed(request):
     else:
         subjects = CSEsubjects
     allposts = allposts.filter(subject__in=subjects)
+
+    if profile.safe_mode:
+        for post in allposts:
+            profanity.load_censor_words()
+            post.title = profanity.censor(post.title)
+            post.content = profanity.censor(post.content)
+
     context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
 
@@ -89,6 +97,14 @@ def feed(request):
 @login_required(login_url="/login")
 def question(request, slug):
     post = Question.objects.filter(slug=slug).first()  # .filter --> Filter the objects
+
+    user = request.user
+    user_id = user.id
+    profile = Profile.objects.filter(user_id=user_id).first()
+    if profile.safe_mode:
+        profanity.load_censor_words()
+        post.title = profanity.censor(post.title)
+        post.content = profanity.censor(post.content)
 
     # Comments Corresponding to post
     comments = Answer.objects.filter(
@@ -101,11 +117,18 @@ def question(request, slug):
     # print(comments, replies)
     reply_count = {}
     for comment in comments:
+        if profile.safe_mode:
+            profanity.load_censor_words()
+            comment.comment = profanity.censor(comment.comment)
+
         reply_count[comment.serial_no] = Answer.objects.filter(parent=comment).count()
 
     # Key = Comment_Id (Serial_No) & Value = List of Replies (whose parent is the comment.serial_no)
     reply_Dict = {}
     for reply in replies:
+        if profile.safe_mode:
+            profanity.load_censor_words()
+            reply.comment = profanity.censor(reply.comment)
         # Initial
         if reply.parent.serial_no not in reply_Dict.keys():
             reply_Dict[reply.parent.serial_no] = [reply]
@@ -188,7 +211,7 @@ def question(request, slug):
 
 @login_required(login_url="/login")
 def comment(request):
-    profanity.load_censor_words()
+    # profanity.load_censor_words()
 
     if request.method == "POST":
         comment = request.POST.get("comment")
@@ -199,7 +222,7 @@ def comment(request):
 
         post = Question.objects.filter(serial_no=post_serial_no).first()
 
-        comment = profanity.censor(comment)
+        # comment = profanity.censor(comment)
 
         if parent_serial_no == "":
             comment = Answer(comment=comment, user=user, post=post)
@@ -216,7 +239,7 @@ def comment(request):
 
 
 def uploadquestion(request):
-    profanity.load_censor_words()
+    # profanity.load_censor_words()
 
     if request.method == "POST":
         title = request.POST.get("title")
@@ -224,8 +247,8 @@ def uploadquestion(request):
         subject = request.POST.get("subject")
         author = request.user
 
-        title = profanity.censor(title)
-        content = profanity.censor(content)
+        # title = profanity.censor(title)
+        # content = profanity.censor(content)
 
         temp = slugify(title, to_lower=True, separator="-", max_length=90)
         slug = str(author.id) + "-" + str(temp)
@@ -326,7 +349,7 @@ def filter(request):
 
 @login_required(login_url="/login")
 def edit_question(request):
-    profanity.load_censor_words()
+    # profanity.load_censor_words()
 
     if request.method == "POST":
         title = request.POST["title"]
@@ -335,8 +358,8 @@ def edit_question(request):
         slug = request.POST["slug"]
         post = Question.objects.get(slug=slug)
 
-        title = profanity.censor(title)
-        content = profanity.censor(content)
+        # title = profanity.censor(title)
+        # content = profanity.censor(content)
 
         if title == "":
             title = post.title
@@ -370,7 +393,7 @@ def delete_question(request):
 
 @login_required(login_url="/login")
 def edit_answer(request):
-    profanity.load_censor_words()
+    # profanity.load_censor_words()
 
     if request.method == "POST":
         comment = request.POST["comment"]
@@ -380,7 +403,7 @@ def edit_answer(request):
         answer = Answer.objects.get(serial_no=comment_serial_no)
         post = Question.objects.get(serial_no=post_serial_no)
 
-        comment = profanity.censor(comment)
+        # comment = profanity.censor(comment)
 
         if comment == "":
             comment = answer.comment
@@ -410,7 +433,7 @@ def delete_answer(request):
 
 @login_required(login_url="/login")
 def edit_reply(request):
-    profanity.load_censor_words()
+    # profanity.load_censor_words()
 
     if request.method == "POST":
         comment = request.POST["reply"]
@@ -420,8 +443,8 @@ def edit_reply(request):
 
         reply = Answer.objects.get(serial_no=comment_serial_no)
 
-        comment = profanity.censor(comment)
-        
+        # comment = profanity.censor(comment)
+
         if comment == "":
             comment = reply.comment
 
