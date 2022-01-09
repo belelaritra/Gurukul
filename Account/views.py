@@ -9,10 +9,17 @@ from django.core.mail import send_mail
 from .models import *
 from Question.models import *
 import uuid
+import requests
+from better_profanity import profanity
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def home(request):
-    return render(request, "Account/home.html")
+    URL = "https://zenquotes.io?api=random"
+    r = requests.get(url=URL)
+    data = r.json()
+    context = {"quote": data[0]["q"], "author": data[0]["a"]}
+    return render(request, "Account/home.html", context)
 
 
 def handleLogin(request):
@@ -131,6 +138,7 @@ def handleSignup(request):
                     branch=branch,
                     year=year,
                     auth_token=auth_token,
+                    safe_mode=True,
                 )
                 profile_obj.save()
 
@@ -239,10 +247,17 @@ def user(request):
             profile = Profile.objects.filter(user=user).first()
             if profile:
                 questions = Question.objects.filter(author=user)
+                if profile.safe_mode:
+                    for q in questions:
+                        profanity.load_censor_words()
+                        q.title = profanity.censor(q.title)
                 answers = Answer.objects.filter(user=user)
                 reply_questions = []
                 for answer in answers:
                     question = Question.objects.filter(serial_no=answer.post_id).first()
+                    if profile.safe_mode:
+                        profanity.load_censor_words()
+                        question.title = profanity.censor(question.title)
                     if question not in reply_questions:
                         reply_questions.append(question)
                 params = {
@@ -264,10 +279,17 @@ def profile(request):
         if user:
             profile = Profile.objects.filter(user=user).first()
             questions = Question.objects.filter(author=user)
+            if profile.safe_mode:
+                for q in questions:
+                    profanity.load_censor_words()
+                    q.title = profanity.censor(q.title)
             answers = Answer.objects.filter(user=user)
             reply_questions = []
             for answer in answers:
                 question = Question.objects.filter(serial_no=answer.post_id).first()
+                if profile.safe_mode:
+                    profanity.load_censor_words()
+                    question.title = profanity.censor(question.title)
                 if question not in reply_questions:
                     reply_questions.append(question)
             params = {
@@ -278,6 +300,7 @@ def profile(request):
                 "reply_questions": reply_questions,
             }
             return render(request, "Account/profile.html", params)
+    return redirect("/error")
 
 
 def terms_and_conditions(request):
@@ -316,3 +339,47 @@ def edit_profile(request):
         profile_obj.save()
         messages.success(request, "Profile updated successfully")
         return redirect("/profile/?username=" + str(user_obj.username))
+
+
+@login_required(login_url="/login")
+def change_safe_mode(request):
+    if request.method == "POST":
+        user_obj = request.user
+        user_id = user_obj.id
+        profile_obj = Profile.objects.filter(user_id=user_id).first()
+
+        if profile_obj.safe_mode:
+            profile_obj.safe_mode = False
+            profile_obj.save()
+            messages.warning(request, "Safe mode disabled")
+        else:
+            profile_obj.safe_mode = True
+            profile_obj.save()
+            messages.success(request, "Safe mode enabled")
+        # safe_mode = request.POST["safe_mode"]
+        # profile_obj.safe_mode = safe_mode
+        # profile_obj.save()
+        # messages.success(request, "Safe Mode updated successfully")
+        return redirect("/profile/?username=" + str(user_obj.username))
+
+
+@login_required(login_url="/login")
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST["old_password"]
+        new_password = request.POST["new_password"]
+        confirm_password = request.POST["confirm_password"]
+        user = request.user
+        if user.check_password(old_password):
+            if new_password == confirm_password:
+                if len(new_password) < 5:
+                    messages.error(request, "Password is too short")
+                    return redirect("/profile/?username=" + str(user.username))
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, "Password changed successfully")
+            else:
+                messages.error(request, "Password did not match")
+        else:
+            messages.error(request, "Wrong password")
+        return redirect("/logout")

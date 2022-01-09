@@ -4,6 +4,7 @@
 {% block Questionactive %} active {% endblock Questionactive %}
 
 {% block body %}
+{% load markdown_extras %}
 <div class="wrap">
   <div class="sidenav">
     <section id="contact" class="contact">
@@ -47,6 +48,8 @@
                 name="content"
                 id="content"
                 rows="5"
+                onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+                placeholder="# : Headings&#10;* : Italic&#10;** : Bold&#10;> : Blockquote&#10;``` : Code&#10;1. : Ordered List&#10;- : Unordered List&#10;- [x] : Task List&#10;--- : Horizontal Rule&#10;[...](...) : Link&#10;![...](...) : Image&#10;"
                 required
               ></textarea>
             </div>
@@ -105,10 +108,20 @@
         class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative"
       >
         <div class="col p-4 d-flex flex-column position-static">
+          
+          <h3 class="mb-0">
+            <a
+              class="text-decoration-none"
+              href="/question/{{post.slug}}"
+              >{{post.title}}</a
+            >
+          </h3>
+        {% comment %} 
           <form
             method="GET"
             action="/profile"
             class="form-inline md-form form-sm mt-0 rounded pull-right"
+            id = "author"
           >
             <input
               hidden
@@ -119,32 +132,23 @@
               value="{{ post.author }}"
               aria-label="Search"
             />
-            <strong class="d-inline-block mb-2 text-primary"
-              >Question by:
-              <button class="btn btn-link btn-sm my-0" type="submit">
-                {{ post.author }}
-              </button>
-            </strong>
+            <button class="btn btn-link btn-sm my-0" style="position:relative;" type="submit">
+                  @{{ post.author }}
+            </button> 
           </form>
-
-          <sup><span class="badge alert-primary">{{post.subject}}</span></sup>
-          <h3 class="mb-0">
-            <a
-              class="text-decoration-none text-dark"
-              href="/question/{{post.slug}}"
-              >{{post.title}}</a
-            >
-          </h3>
+        {% endcomment %}
+              <p class="text-muted"><small>
+                asked by 
+                <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+                
+                  on: {{ post.timestamp|date:"M d,Y" }}
+                </small>
+              </p>
+          </form>
           <div class="mb-1 text-muted">{{post.datetime}}</div>
-          <p class="card-text mb-auto">{{post.content | truncatechars:150}}</p>
-          <div class="my-2">
-            <a
-              href="/question/{{post.slug}}"
-              role="button"
-              class="btn btn-primary"
-              >Continue reading</a
-            >
-          </div>
+          <div class="card-text text-black"><a class="text-decoration-none text-black" href="/question/{{post.slug}}">{{post.content | markdown | safe | truncatechars:150}}</a></div>
+          <sup><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span></sup>
+          
         </div>
       </div>
       {% endfor %}

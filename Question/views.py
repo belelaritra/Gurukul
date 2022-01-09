@@ -12,6 +12,8 @@ from datetime import datetime
 from slugify import slugify
 from Account.models import Profile
 
+from better_profanity import profanity
+
 # Create your views here.
 @login_required(login_url="/login")
 def feed(request):
@@ -68,6 +70,7 @@ def feed(request):
         "Communication and Optical Instrumentation",
     }
     profile = Profile.objects.filter(user=user).first()
+
     if not user.is_staff:
         if profile.branch == "EE":
             subjects = EEsubjects
@@ -80,6 +83,13 @@ def feed(request):
     else:
         subjects = CSEsubjects
     allposts = allposts.filter(subject__in=subjects)
+
+    if profile.safe_mode:
+        for post in allposts:
+            profanity.load_censor_words()
+            post.title = profanity.censor(post.title)
+            post.content = profanity.censor(post.content)
+
     context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
 
@@ -87,6 +97,14 @@ def feed(request):
 @login_required(login_url="/login")
 def question(request, slug):
     post = Question.objects.filter(slug=slug).first()  # .filter --> Filter the objects
+
+    user = request.user
+    user_id = user.id
+    profile = Profile.objects.filter(user_id=user_id).first()
+    if profile.safe_mode:
+        profanity.load_censor_words()
+        post.title = profanity.censor(post.title)
+        post.content = profanity.censor(post.content)
 
     # Comments Corresponding to post
     comments = Answer.objects.filter(
@@ -99,11 +117,18 @@ def question(request, slug):
     # print(comments, replies)
     reply_count = {}
     for comment in comments:
+        if profile.safe_mode:
+            profanity.load_censor_words()
+            comment.comment = profanity.censor(comment.comment)
+
         reply_count[comment.serial_no] = Answer.objects.filter(parent=comment).count()
 
     # Key = Comment_Id (Serial_No) & Value = List of Replies (whose parent is the comment.serial_no)
     reply_Dict = {}
     for reply in replies:
+        if profile.safe_mode:
+            profanity.load_censor_words()
+            reply.comment = profanity.censor(reply.comment)
         # Initial
         if reply.parent.serial_no not in reply_Dict.keys():
             reply_Dict[reply.parent.serial_no] = [reply]
@@ -186,6 +211,8 @@ def question(request, slug):
 
 @login_required(login_url="/login")
 def comment(request):
+    # profanity.load_censor_words()
+
     if request.method == "POST":
         comment = request.POST.get("comment")
         user = request.user
@@ -194,6 +221,8 @@ def comment(request):
         parent_serial_no = request.POST.get("parent_serial_no")
 
         post = Question.objects.filter(serial_no=post_serial_no).first()
+
+        # comment = profanity.censor(comment)
 
         if parent_serial_no == "":
             comment = Answer(comment=comment, user=user, post=post)
@@ -210,11 +239,17 @@ def comment(request):
 
 
 def uploadquestion(request):
+    # profanity.load_censor_words()
+
     if request.method == "POST":
         title = request.POST.get("title")
         content = request.POST.get("content")
         subject = request.POST.get("subject")
         author = request.user
+
+        # title = profanity.censor(title)
+        # content = profanity.censor(content)
+
         temp = slugify(title, to_lower=True, separator="-", max_length=90)
         slug = str(author.id) + "-" + str(temp)
         timestamp = datetime.now()
@@ -314,12 +349,17 @@ def filter(request):
 
 @login_required(login_url="/login")
 def edit_question(request):
+    # profanity.load_censor_words()
+
     if request.method == "POST":
         title = request.POST["title"]
         content = request.POST["content"]
         subject = request.POST["subject"]
         slug = request.POST["slug"]
         post = Question.objects.get(slug=slug)
+
+        # title = profanity.censor(title)
+        # content = profanity.censor(content)
 
         if title == "":
             title = post.title
@@ -332,7 +372,8 @@ def edit_question(request):
                 post.title = title
                 post.content = content
                 post.subject = subject
-                post.timestamp = datetime.now()
+                post.edited_timestamp = datetime.now()
+                post.edited = True
                 post.save()
                 messages.success(request, "Question edited successfully")
 
@@ -353,6 +394,8 @@ def delete_question(request):
 
 @login_required(login_url="/login")
 def edit_answer(request):
+    # profanity.load_censor_words()
+
     if request.method == "POST":
         comment = request.POST["comment"]
         post_serial_no = request.POST["post_serial_no"]
@@ -361,13 +404,16 @@ def edit_answer(request):
         answer = Answer.objects.get(serial_no=comment_serial_no)
         post = Question.objects.get(serial_no=post_serial_no)
 
+        # comment = profanity.censor(comment)
+
         if comment == "":
             comment = answer.comment
 
         if comment and post and comment_serial_no:
             try:
                 answer.comment = comment
-                answer.timestamp = datetime.now()
+                answer.edited_timestamp = datetime.now()
+                answer.edited = True
                 answer.save()
                 messages.success(request, "Answer edited successfully")
             except:
@@ -389,6 +435,8 @@ def delete_answer(request):
 
 @login_required(login_url="/login")
 def edit_reply(request):
+    # profanity.load_censor_words()
+
     if request.method == "POST":
         comment = request.POST["reply"]
         slug = request.POST["slug"]
@@ -397,13 +445,16 @@ def edit_reply(request):
 
         reply = Answer.objects.get(serial_no=comment_serial_no)
 
+        # comment = profanity.censor(comment)
+
         if comment == "":
             comment = reply.comment
 
         if comment and comment_serial_no:
             try:
                 reply.comment = comment
-                reply.timestamp = datetime.now()
+                reply.edited_timestamp = datetime.now()
+                reply.edited = True
                 reply.save()
                 messages.success(request, "Reply edited successfully")
             except:

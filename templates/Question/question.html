@@ -4,10 +4,10 @@
 {% block body %}
 {% load humanize %}
 {% load get_dict %}
+{% load markdown_extras %}
 
-<div class="container my-3">
-  <h2 class="blog-post-title">{{post.title}}</h2>
-  <form
+
+  {% comment %} <form
     method="GET"
     action="/profile"
     class="form-inline md-form form-sm mt-0 rounded pull-right"
@@ -20,24 +20,41 @@
       type="text"
       value="{{ post.author }}"
       aria-label="Search"
-    />
+    /> 
+     <button class="btn btn-link btn-sm my-0" type="submit">
+        @{{ post.author }}
+      </button> 
+      </form>
+      {% endcomment %}
 
-    <p class="blog-post-meta">
-      {{post.timestamp}} by
-      <button class="btn btn-link btn-sm my-0" type="submit">
-        {{ post.author }}
-      </button>
-    </p>
-  </form>
-  <p>{{post.content}}</p>
+ 
+<div class="container my-3">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 class="blog-post-title">{{post.title}}</h2>    
+    </div>
+  </div> 
 
-  {% if request.user.username == post.author%}
+  <p class="blog-post-meta">
+    {{post.timestamp}} by
+    <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+    {% if post.edited %}
+    <span class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </span>
+    {% endif %}
+  </p>
+
+  {{ post.content | markdown | safe }}
+</div>
+
+{% comment %} ==================================================== Edit Delete {% endcomment %}
+{% if request.user.username == post.author%}
+<div class="container">
   <a
     href=""
-    class="btn btn-warning btn-sm btn-rounded mb-4"
+    class="btn btn-white btn-sm btn-rounded mb-4"
     data-toggle="modal"
     data-target="#modalEditQuestion"
-    >Edit</a
+    ><i class="fas fa-edit"></i>&nbsp;Edit</a
   >
 
   <div
@@ -74,7 +91,6 @@
               <label for="title">Title</label>
               <input type="text" name="title" class="form-control" id="title" />
             </div>
-
             <div class="md-form mb-4">
               <label for="subject">Subject</label>
               <select class="form-control" name="subject" id="subject">
@@ -91,6 +107,8 @@
                 class="form-control"
                 name="content"
                 id="content"
+                onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+                placeholder="# : Headings&#10;* : Italic&#10;** : Bold&#10;> : Blockquote&#10;``` : Code&#10;1. : Ordered List&#10;- : Unordered List&#10;- [x] : Task List&#10;--- : Horizontal Rule&#10;[...](...) : Link&#10;![...](...) : Image&#10;"
                 rows="5"
               ></textarea>
             </div>
@@ -107,10 +125,10 @@
 
   <a
     href=""
-    class="btn btn-danger btn-sm btn-rounded mb-4"
+    class="btn btn-white btn-sm btn-rounded mb-4"
     data-toggle="modal"
     data-target="#modaldeleteQuestion"
-    >Delete</a
+    ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
   >
 
   <div
@@ -152,8 +170,8 @@
     </div>
   </div>
   {% endif %}
-</div>
 
+  {% comment %} ==================================================== Comments ============================================== {% endcomment %}
 <div class="container">
   <h2>Answers ({{comments.count}})</h2>
   {% if user.is_anonymous %}
@@ -171,6 +189,7 @@
         name="comment"
         id="comment"
         aria-describedby="emailHelp"
+        onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
         placeholder="Your Answer"
       ></textarea>
     </div>
@@ -186,7 +205,7 @@
       id="post_serial_no"
       value="{{post.serial_no}}"
     />
-    <button type="submit" class="btn btn-primary my-3">Submit</button>
+    <button type="submit" class="btn btn-primary my-3"><i class="fa fa-comments"></i>&nbsp;Add</button>
   </form>
 
   {% for comment in comments %}
@@ -211,23 +230,27 @@
           id="username"
           class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
           type="text"
-          value="{{ post.author }}"
+          value="{{ comment.user.username }}"
           aria-label="Search"
         />
         <b>{{comment.user.first_name}} {{comment.user.last_name}}</b>
         <button class="btn btn-link btn-sm my-0" type="submit">
           @{{comment.user.username}}</button
         >&nbsp;<span class="badge alert-primary"
-          >{{comment.timestamp | naturaltime }} </span
-        ><br />
-      </form>
+          >{{comment.timestamp | naturaltime }} </span>
+          
+          {% if comment.edited %}
+          <span class="badge alert-white text-muted">(Edited) {{comment.edited_timestamp | naturaltime }} </span>
+          {% endif %}
 
-      <div>{{comment.comment}}</div>
+          <br />
+      </form>
+      <div>{{comment.comment | markdown | safe}}</div>
 
       <div class="reply mx-0">
         {% if reply_count|get_dict:comment.serial_no %}
         <button
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-white"
           type="button"
           data-toggle="collapse"
           data-target="#view_replies_{{comment.serial_no}}"
@@ -235,11 +258,11 @@
           aria-expanded="false"
           aria-controls="view_replies_{{comment.serial_no}}"
         >
-          View Replies ({{reply_count|get_dict:comment.serial_no}})
+        <i class="fas fa-eye"></i>&nbsp;View Replies ({{reply_count|get_dict:comment.serial_no}})
         </button>
         {% else %}
         <button
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-white"
           type="button"
           data-toggle="collapse"
           data-target="#view_replies_{{comment.serial_no}}"
@@ -251,24 +274,23 @@
         </button>
         {% endif %}
         <button
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-white"
           type="button"
           data-toggle="collapse"
           data-target="#replyBox_{{comment.serial_no}}"
           aria-expanded="false"
           aria-controls="replyBox_{{comment.serial_no}}"
         >
-          Reply
+        <i class="fa fa-reply"></i>&nbsp;Reply
         </button>
 
         {% if request.user.username == comment.user.username %}
 
         <a
           href=""
-          class="btn btn-warning btn-sm btn-rounded mb-4"
+          class="btn btn-white btn-sm btn-rounded mb-4"
           data-toggle="modal"
-          data-target="#modalEditAnswer"
-          >Edit</a
+          data-target="#modalEditAnswer"><i class="fas fa-edit"></i>&nbsp;Edit</a
         >
 
         <div
@@ -306,6 +328,7 @@
                     class="form-control"
                     name="comment"
                     id="comment"
+                    onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                     rows="3"
                   ></textarea>
                 </div>
@@ -333,10 +356,10 @@
 
         <a
           href=""
-          class="btn btn-danger btn-sm btn-rounded mb-4"
+          class="btn btn-white btn-sm btn-rounded mb-4"
           data-toggle="modal"
           data-target="#modaldeleteAnswer"
-          >Delete</a
+          ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
         >
 
         <div
@@ -405,6 +428,7 @@
                   name="comment"
                   id="comment"
                   aria-describedby="emailHelp"
+                  onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                   placeholder="Your Reply"
                 ></textarea>
                 <input
@@ -451,28 +475,32 @@
                   id="username"
                   class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
                   type="text"
-                  value="{{ post.author }}"
+                  value="{{ reply.user.username }}"
                   aria-label="Search"
                 />
                 <b>{{reply.user.first_name}} {{reply.user.last_name}}</b>
                 <button class="btn btn-link btn-sm my-0" type="submit">
                   @{{reply.user.username}}</button
                 >&nbsp;<span class="badge alert-primary"
-                  >{{reply.timestamp | naturaltime }} </span
-                ><br />
+                  >{{reply.timestamp | naturaltime }} </span>
+                  {% if reply.edited %}
+                  <span class="badge alert-white text-muted">(Edited) {{reply.edited_timestamp | naturaltime }} </span>
+                  {% endif %}
+
+                  <br />
               </form>
 
-              <br />{{reply.comment}}
+              {{reply.comment | markdown | safe}}
             </div>
           </div>
           {% if request.user.username == reply.user.username %}
 
           <a
             href=""
-            class="btn btn-warning btn-sm btn-rounded mb-4"
+            class="btn btn-white btn-sm btn-rounded mb-4"
             data-toggle="modal"
             data-target="#modalEditReply"
-            >Edit</a
+            ><i class="fas fa-edit"></i>&nbsp;Edit</a
           >
 
           <div
@@ -510,6 +538,7 @@
                       class="form-control"
                       name="reply"
                       id="reply"
+                      onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                       rows="3"
                     ></textarea>
                   </div>
@@ -539,10 +568,10 @@
 
           <a
             href=""
-            class="btn btn-danger btn-sm btn-rounded mb-4"
+            class="btn btn-white btn-sm btn-rounded mb-4"
             data-toggle="modal"
             data-target="#modaldeleteReply"
-            >Delete</a
+            ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
           >
 
           <div

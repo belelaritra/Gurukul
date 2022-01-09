@@ -247,3 +247,15 @@
   });
 
 })()
+
+function safe_mode_func1(event) {
+  const checkbox = event.currentTarget;
+  checkbox.value = false;
+  event.currentTarget.closest('form').submit()
+}
+
+function safe_mode_func2(event) {
+  const checkbox = event.currentTarget;
+  checkbox.value = true;
+  event.currentTarget.closest('form').submit()
+}

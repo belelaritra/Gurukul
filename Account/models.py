@@ -24,6 +24,7 @@ class Profile(models.Model):
     auth_token = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    safe_mode = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.first_name + " " + self.user.last_name

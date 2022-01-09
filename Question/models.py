@@ -15,7 +15,8 @@ class Question(models.Model):
     slug = models.SlugField(max_length=100)
     subject = models.CharField(max_length=100, null=True)
     timestamp = models.DateTimeField(blank=True)
-
+    edited = models.BooleanField(default=False)
+    edited_timestamp = models.DateTimeField(blank=True, null=True)
     # Will show the name of the table in the admin page (not Contact_object)
     def __str__(self):
         return str(self.serial_no) + ". " + self.title + " - " + self.author
@@ -36,6 +37,8 @@ class Answer(models.Model):
         "self", on_delete=models.CASCADE, null=True
     )  # self --> Refering a blog comment(reply) or, 1st Comment The same table
     timestamp = models.DateTimeField(default=now)
+    edited = models.BooleanField(default=False)
+    edited_timestamp = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return (

@@ -14,4 +14,6 @@ urlpatterns = [
     path("profile/", profile, name="profile"),
     path("terms/", terms_and_conditions, name="terms"),
     path("edit_profile", edit_profile, name="edit_profile"),
+    path("change_safe_mode", change_safe_mode, name="change_safe_mode"),
+    path("change_password", change_password, name="change_password"),
 ]

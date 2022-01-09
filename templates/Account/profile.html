@@ -10,13 +10,12 @@
                     width="150px"
                     src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"/>
                     {% if user.is_active %}
-                        <span class="text-success">Online</span>
+                        <span class="text-success">Active</span>
                     {% else %}
-                        <span class="text-danger">Offline</span>
+                        <span class="text-danger">Inactive</span>
                     {% endif %}
                     <span class="font-weight-bold">{{profile.fname}} {{profile.lname}}</span>
                     <span class="text-muted">@{{user.username}}</span>
-                    <span class="text-black-50">{{profile.email}}</span>
             </div>
         </div>
         <div class="col-md-5 border-right">
