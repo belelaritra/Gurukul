@@ -77,7 +77,7 @@ def handleSignup(request):
             try:
                 # Username
                 if User.objects.filter(username=username).exists():
-                    messages.success(request, "Username already exists")
+                    messages.error(request, "Username already exists")
                     return redirect("/signup")
 
                 if not username.isalnum():

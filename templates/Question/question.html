@@ -2,42 +2,29 @@
 {% load static %} 
 {% block title %} Question {% endblock title %} 
 {% block body %}
+<div class="wrap">
 {% load humanize %}
 {% load get_dict %}
 {% load markdown_extras %}
-
-
-  {% comment %} <form
-    method="GET"
-    action="/profile"
-    class="form-inline md-form form-sm mt-0 rounded pull-right"
-  >
-    <input
-      hidden
-      name="username"
-      id="username"
-      class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
-      type="text"
-      value="{{ post.author }}"
-      aria-label="Search"
-    /> 
-     <button class="btn btn-link btn-sm my-0" type="submit">
-        @{{ post.author }}
-      </button> 
-      </form>
-      {% endcomment %}
 
  
 <div class="container my-3">
   <div class="row">
     <div class="col-md-12">
-      <h2 class="blog-post-title">{{post.title}}</h2>    
+      <div class="section-title-left">
+      <span style="font-size:31px">{{post.title}}</span>
+      <h2>{{post.title}}</h2>
+      </div>    
     </div>
   </div> 
 
-  <p class="blog-post-meta">
+  <p class="blog-post-meta">    
     {{post.timestamp}} by
-    <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+    {% if request.user.username == post.author %}
+    <a href="/profile/?username={{ post.author }}">You</a>
+    {% else %}
+      <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+    {% endif %}
     {% if post.edited %}
     <span class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </span>
     {% endif %}
@@ -51,7 +38,7 @@
 <div class="container">
   <a
     href=""
-    class="btn btn-white btn-sm btn-rounded mb-4"
+    class="btn btn-white btn-sm btn-rounded"
     data-toggle="modal"
     data-target="#modalEditQuestion"
     ><i class="fas fa-edit"></i>&nbsp;Edit</a
@@ -125,7 +112,7 @@
 
   <a
     href=""
-    class="btn btn-white btn-sm btn-rounded mb-4"
+    class="btn btn-white btn-sm btn-rounded"
     data-toggle="modal"
     data-target="#modaldeleteQuestion"
     ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
@@ -173,7 +160,7 @@
 
   {% comment %} ==================================================== Comments ============================================== {% endcomment %}
 <div class="container">
-  <h2>Answers ({{comments.count}})</h2>
+  <h5>Answers ({{comments.count}})</h5>
   {% if user.is_anonymous %}
   <p>Please <a href="/login">Login</a> to post a Answer</p>
   {% else %}
@@ -181,9 +168,9 @@
   <form action="/question/comment" method="POST">
     {% csrf_token %}
     <div class="form-group">
-      <label for="comment">Post Answer</label>
+      {% comment %} <label for="comment">Post Answer</label> {% endcomment %}
       <textarea
-        rows="5"
+        rows="3"
         type="paragraph_text"
         class="form-control"
         name="comment"
@@ -205,24 +192,22 @@
       id="post_serial_no"
       value="{{post.serial_no}}"
     />
-    <button type="submit" class="btn btn-primary my-3"><i class="fa fa-comments"></i>&nbsp;Add</button>
-  </form>
-
+      <button type="submit" class="btn btn-outline-dark btn-sm my-3 pull-right"><i class="fa fa-comments"></i>&nbsp;Add</button>
+    </form>
   {% for comment in comments %}
 
   <div class="row my-3 mx-0">
     <div class="col-md-1">
       <img
-        class="rounded mx-auto d-block w-100 p-2"
+        class="head-ico"
         src="/static/images/user.png"
-        width="15px"
       />
     </div>
     <div class="col-md-11">
       <form
         method="GET"
         action="/profile"
-        class="form-inline md-form form-sm mt-0 rounded pull-right"
+        class="form-inline md-form form-sm mt-0 my-2 ms-2rounded pull-right"
       >
         <input
           hidden
@@ -233,17 +218,22 @@
           value="{{ comment.user.username }}"
           aria-label="Search"
         />
-        <b>{{comment.user.first_name}} {{comment.user.last_name}}</b>
-        <button class="btn btn-link btn-sm my-0" type="submit">
-          @{{comment.user.username}}</button
-        >&nbsp;<span class="badge alert-primary"
-          >{{comment.timestamp | naturaltime }} </span>
-          
+        {% if request.user.username == comment.user.username %}
+          <b>You</b>
+          &nbsp;<span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span>
           {% if comment.edited %}
           <span class="badge alert-white text-muted">(Edited) {{comment.edited_timestamp | naturaltime }} </span>
           {% endif %}
-
-          <br />
+        {% else %}
+          <b><a href="/profile/?username={{ comment.user.username }}" class="text-black">{{comment.user.first_name}} {{comment.user.last_name}}</a></b>
+          &nbsp;<span class="badge alert-primary">{{comment.timestamp | naturaltime }} </span>
+          {% if comment.edited %}
+          <span class="badge alert-white text-muted">(Edited) {{comment.edited_timestamp | naturaltime }} </span>
+          {% endif %}
+        {% endif %}
+        <br>
+        <a href="/profile/?username={{ comment.user.username }}" class="text-muted" style="font-size: 13px;">@{{comment.user.username}}</a>
+        &nbsp;
       </form>
       <div>{{comment.comment | markdown | safe}}</div>
 
@@ -270,7 +260,7 @@
           aria-controls="view_replies_{{comment.serial_no}}"
           disabled
         >
-          View Replies ({{reply_count|get_dict:comment.serial_no}})
+        <i class="fa fa-eye-slash"></i>&nbsp;View Replies ({{reply_count|get_dict:comment.serial_no}})
         </button>
         {% endif %}
         <button
@@ -288,7 +278,7 @@
 
         <a
           href=""
-          class="btn btn-white btn-sm btn-rounded mb-4"
+          class="btn btn-white btn-sm btn-rounded"
           data-toggle="modal"
           data-target="#modalEditAnswer"><i class="fas fa-edit"></i>&nbsp;Edit</a
         >
@@ -356,7 +346,7 @@
 
         <a
           href=""
-          class="btn btn-white btn-sm btn-rounded mb-4"
+          class="btn btn-white btn-sm btn-rounded"
           data-toggle="modal"
           data-target="#modaldeleteAnswer"
           ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
@@ -451,23 +441,22 @@
         </div>
 
         <div
-          class="collapse replies bg-light my-2"
+          class="collapse replies my-2"
           id="view_replies_{{comment.serial_no}}"
         >
           {% for reply in reply_Dict|get_dict:comment.serial_no %}
           <div class="row">
             <div class="col-md-1">
               <img
-                class="rounded mx-auto d-block w-75 my-2"
+                class="head-ico"
                 src="/static/images/user.png"
-                width="15px"
               />
             </div>
             <div class="col-md-11">
               <form
                 method="GET"
                 action="/profile"
-                class="form-inline md-form form-sm mt-0 rounded pull-right"
+                class="form-inline md-form form-sm mt-0 my-2 rounded pull-right"
               >
                 <input
                   hidden
@@ -478,18 +467,37 @@
                   value="{{ reply.user.username }}"
                   aria-label="Search"
                 />
-                <b>{{reply.user.first_name}} {{reply.user.last_name}}</b>
-                <button class="btn btn-link btn-sm my-0" type="submit">
-                  @{{reply.user.username}}</button
-                >&nbsp;<span class="badge alert-primary"
+                {% if request.user.username == reply.user.username %}
+                  <b>You</b>
+                  &nbsp;<span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span>
+                  {% if reply.edited %}
+                    <span class="badge alert-white text-muted">(Edited) {{reply.edited_timestamp | naturaltime }} </span>
+                  {% endif %}
+                {% else %}
+                  <b><a href="/profile/?username={{ comment.user.username }}" class="text-black">{{reply.user.first_name}} {{reply.user.last_name}}</a></b>
+                  &nbsp;<span class="badge alert-primary">{{reply.timestamp | naturaltime }} </span>
+                  {% if reply.edited %}
+                    <span class="badge alert-white text-muted">(Edited) {{reply.edited_timestamp | naturaltime }} </span>
+                  {% endif %}
+                {% endif %}
+                <br>
+                <a href="/profile/?username={{ reply.user.username }}" class="text-muted" style="font-size: 12px;">@{{reply.user.username}}</a>
+                &nbsp;
+
+                {% comment %} {% if request.user.username == reply.user.username %}
+                  <b>You</b>
+                {% else %}
+                  <b><a href="/profile/?username={{ comment.user.username }}" class="text-black">{{reply.user.first_name}} {{reply.user.last_name}}</a></b>
+                  <a href="/profile/?username={{ reply.user.username }}" class="text-muted" style="font-size: 12px;">@{{reply.user.username}}</a>
+                {% endif %}
+                &nbsp;<span class="badge alert-primary"
                   >{{reply.timestamp | naturaltime }} </span>
                   {% if reply.edited %}
                   <span class="badge alert-white text-muted">(Edited) {{reply.edited_timestamp | naturaltime }} </span>
                   {% endif %}
 
-                  <br />
+                  <br /> {% endcomment %}
               </form>
-
               {{reply.comment | markdown | safe}}
             </div>
           </div>
@@ -497,7 +505,7 @@
 
           <a
             href=""
-            class="btn btn-white btn-sm btn-rounded mb-4"
+            class="btn btn-white btn-sm btn-rounded"
             data-toggle="modal"
             data-target="#modalEditReply"
             ><i class="fas fa-edit"></i>&nbsp;Edit</a
@@ -568,7 +576,7 @@
 
           <a
             href=""
-            class="btn btn-white btn-sm btn-rounded mb-4"
+            class="btn btn-white btn-sm btn-rounded"
             data-toggle="modal"
             data-target="#modaldeleteReply"
             ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete</a
@@ -632,6 +640,96 @@
   </div>
 
   {% endfor %} {% endif %}
+</div>
+{% comment %} <div class="sidenav">
+  <section id="contact" class="contact">
+    <div class="section-title">
+      <span>Question</span>
+      <h2>Add Question</h2>
+    </div>
+
+    <div class="row">
+      <div class="question-container">
+        <form
+          action="/question/uploadquestion"
+          method="POST"
+          role="form"
+          class="question-form"
+        >
+          {% csrf_token %}
+          <div class="form-group mt-3 mx-2">
+            <label for="title">Title</label>
+            <input
+              type="text"
+              name="title"
+              class="form-control"
+              id="title"
+              required
+            />
+          </div>
+          <div class="form-group mt-3 mx-2">
+            <label for="subject">Subject</label>
+            <select class="form-control" name="subject" id="subject" required>
+              <option value="">Select Subject</option>
+              {% for subject in subjects %}
+              <option value="{{subject}}">{{subject}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mt-3 mx-2">
+            <label for="description">Content</label>
+            <textarea
+              class="form-control"
+              name="content"
+              id="content"
+              rows="5"
+              onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+              placeholder="# : Headings&#10;* : Italic&#10;** : Bold&#10;> : Blockquote&#10;``` : Code&#10;1. : Ordered List&#10;- : Unordered List&#10;- [x] : Task List&#10;--- : Horizontal Rule&#10;[...](...) : Link&#10;![...](...) : Image&#10;"
+              required
+            ></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit">Post Question</button>
+          </div>
+          <br />
+        </form>
+      </div>
+    </div>
+  </section>
+</div> {% endcomment %}
+<div class="sidenavleft">
+  <section id="contact" class="contact">
+    <div class="section-title">
+      <span>More</span>
+      <h2>Topics</h2>
+    </div>
+
+    <div class="row">
+      <div class="question-container">
+        {% for subject in subjects %}
+        <form
+          method="GET"
+          action="/question/filter"
+          class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right"
+        >
+          <input
+            hidden
+            name="subject"
+            id="subject"
+            class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+            type="text"
+            value="{{ subject }}"
+            aria-label="Search"
+          />
+          <button class="btn btn-rounded btn-sm my-0" type="submit">
+            {{ subject }}
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
 </div>
 
 {% endblock body %}
