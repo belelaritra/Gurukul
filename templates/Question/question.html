@@ -29,8 +29,9 @@
     <span class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </span>
     {% endif %}
   </p>
-
+<div class="markdown-content">
   {{ post.content | markdown | safe }}
+</div>
 </div>
 
 {% comment %} ==================================================== Edit Delete {% endcomment %}
@@ -203,7 +204,7 @@
         src="/static/images/user.png"
       />
     </div>
-    <div class="col-md-11">
+    <div class="markdown-content">
       <form
         method="GET"
         action="/profile"
@@ -499,7 +500,8 @@
                   <br /> {% endcomment %}
               </form>
               {{reply.comment | markdown | safe}}
-            </div>
+              </div>
+            
           </div>
           {% if request.user.username == reply.user.username %}
 
