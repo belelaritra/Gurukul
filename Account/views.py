@@ -386,6 +386,7 @@ def change_password(request):
             messages.error(request, "Wrong password")
         return redirect("/logout")
 
+
 @login_required(login_url="/login")
 def change_profile_pic(request):
     if request.method == "POST":
@@ -394,6 +395,13 @@ def change_profile_pic(request):
         profile_obj = Profile.objects.filter(user_id=user_id).first()
         prev_profile_pic = profile_obj.profile_pic
         profile_pic = request.FILES["profile_pic"]
+        file_name = profile_pic.name
+        file_extension = file_name.split(".")[-1]
+        if file_extension.lower() not in ["jpg", "jpeg", "png"]:
+            messages.error(request, "Invalid file type")
+            return redirect("/profile/?username=" + str(user_obj.username))
+        else:
+            profile_pic.name = str(user_obj.username) + "." + file_extension
         profile_obj.profile_pic = profile_pic
         profile_obj.save()
         if prev_profile_pic:
