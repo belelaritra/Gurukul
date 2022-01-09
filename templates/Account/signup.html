@@ -22,7 +22,7 @@
                 </a>
               </p>
 
-                {% if messages %}
+                <!-- {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-info alert-dismissible" role="alert">
                   <strong>Message: </strong> {{ message }}
@@ -31,7 +31,7 @@
                 </div>
                 {% comment %} <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}</div> {% endcomment %}
                 {% endfor %}
-              {% endif %}
+              {% endif %} -->
               
                 <form class="mx-1 mx-md-4" method="POST">
                   {% csrf_token %}
@@ -130,7 +130,7 @@
                       <div class="form-outline flex-fill mb-0">
                         {% comment %} <label class="form-label" for="form3Example1c">Last Name</label> {% endcomment %}
                         <input type="number" name="year"
-                        id="year" class="form-control" placeholder="Year" min="1990" max="2022" maxlength="4" minlength="4" required>
+                        id="year" class="form-control" placeholder="Year" min="1990" max="2030" maxlength="4" minlength="4" required>
                       </div>
                     </div> 
                   </div>
@@ -286,7 +286,7 @@
                   name="year"
                   id="year"
                   class="form-control"
-                  min="1990" max="2022"
+                  min="1990" max="2030"
                   maxlength="4"
                   required>
               </div>
