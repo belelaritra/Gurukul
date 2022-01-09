@@ -146,7 +146,7 @@
               </p>
           </form>
           <div class="mb-1 text-muted">{{post.datetime}}</div>
-          <div class="card-text">{{post.content | markdown | safe | truncatechars:150}}</div>
+          <div class="card-text text-black"><a class="text-decoration-none text-black" href="/question/{{post.slug}}">{{post.content | markdown | safe | truncatechars:150}}</a></div>
           <sup><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span></sup>
           
         </div>
