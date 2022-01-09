@@ -362,6 +362,7 @@ def change_safe_mode(request):
         # messages.success(request, "Safe Mode updated successfully")
         return redirect("/profile/?username=" + str(user_obj.username))
 
+
 @login_required(login_url="/login")
 def change_password(request):
     if request.method == "POST":

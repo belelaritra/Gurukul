@@ -39,6 +39,7 @@ class Answer(models.Model):
     timestamp = models.DateTimeField(default=now)
     edited = models.BooleanField(default=False)
     edited_timestamp = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return (
             "Post: "
