@@ -21,6 +21,7 @@ class Profile(models.Model):
         default="CSE",
     )
     year = models.CharField(max_length=4, default="")
+    profile_pic = models.ImageField(null=True, blank=True)
     auth_token = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

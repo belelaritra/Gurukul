@@ -12,6 +12,8 @@ import uuid
 import requests
 from better_profanity import profanity
 from django.http import HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+import os
 
 # Create your views here.
 def home(request):
@@ -383,3 +385,18 @@ def change_password(request):
         else:
             messages.error(request, "Wrong password")
         return redirect("/logout")
+
+@login_required(login_url="/login")
+def change_profile_pic(request):
+    if request.method == "POST":
+        user_obj = request.user
+        user_id = user_obj.id
+        profile_obj = Profile.objects.filter(user_id=user_id).first()
+        prev_profile_pic = profile_obj.profile_pic
+        profile_pic = request.FILES["profile_pic"]
+        profile_obj.profile_pic = profile_pic
+        profile_obj.save()
+        if prev_profile_pic:
+            os.remove(prev_profile_pic.path)
+        messages.success(request, "Profile pic updated successfully")
+        return redirect("/profile/?username=" + str(user_obj.username))

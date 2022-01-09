@@ -198,10 +198,14 @@
 
   <div class="row my-3 mx-0">
     <div class="col-md-1">
+      {% if comment.user.profile.profile_pic %}
+          <img src="{{ comment.user.profile.profile_pic.url }}" class="head-ico rounded-circle">
+      {% else %}
       <img
         class="head-ico"
         src="/static/images/user.png"
       />
+      {% endif %}
     </div>
     <div class="col-md-11">
       <form
@@ -447,10 +451,14 @@
           {% for reply in reply_Dict|get_dict:comment.serial_no %}
           <div class="row">
             <div class="col-md-1">
+              {% if reply.user.profile.profile_pic %}
+                  <img src="{{ comment.user.profile.profile_pic.url }}" class="head-ico rounded-circle">
+              {% else %}
               <img
                 class="head-ico"
                 src="/static/images/user.png"
               />
+              {% endif %}
             </div>
             <div class="col-md-11">
               <form
