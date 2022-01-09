@@ -97,8 +97,10 @@ def feed(request):
 @login_required(login_url="/login")
 def question(request, slug):
     post = Question.objects.filter(slug=slug).first()  # .filter --> Filter the objects
-
     user = request.user
+    if user.username != post.author:
+            post.views = post.views + 1
+            post.save()
     user_id = user.id
     profile = Profile.objects.filter(user_id=user_id).first()
     if profile.safe_mode:
@@ -197,6 +199,16 @@ def question(request, slug):
     else:
         subjects = CSEsubjects
 
+    if post.likes.filter(id=user.id).exists():
+        liked = True
+    else:
+        liked = False
+
+    if post.dislikes.filter(id=user.id).exists():
+        disliked = True
+    else:
+        disliked = False
+
     context = {
         "post": post,
         "comments": comments,
@@ -204,6 +216,8 @@ def question(request, slug):
         "reply_Dict": reply_Dict,
         "reply_count": reply_count,
         "subjects": subjects,
+        "liked": liked,
+        "disliked": disliked,
     }
     return render(request, "Question/question.html", context)
     # return HttpResponse(f'Blog Post : {slug}')
@@ -470,4 +484,36 @@ def delete_reply(request):
         reply = Answer.objects.get(serial_no=comment_serial_no)
         reply.delete()
         messages.success(request, "Reply deleted successfully")
+        return redirect(f"/question/{slug}")
+
+@login_required(login_url="/login")
+def like_question(request):
+    if request.method == "POST":
+        slug = request.POST["post_id1"]
+        post = Question.objects.get(slug=slug)
+        user = request.user
+        if post.dislikes.filter(id=user.id).exists():
+            post.dislikes.remove(user)
+        if post.likes.filter(id=user.id).exists():
+            post.likes.remove(user)
+        else:
+            post.likes.add(user)
+        post.save()
+        user = request.user
+        return redirect(f"/question/{slug}")
+
+@login_required(login_url="/login")
+def dislike_question(request):
+    if request.method == "POST":
+        slug = request.POST["post_id2"]
+        post = Question.objects.get(slug=slug)
+        user = request.user
+        if post.likes.filter(id=user.id).exists():
+            post.likes.remove(user)
+        if post.dislikes.filter(id=user.id).exists():
+            post.dislikes.remove(user)
+        else:
+            post.dislikes.add(user)
+        post.save()
+        user = request.user
         return redirect(f"/question/{slug}")
