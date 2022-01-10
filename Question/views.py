@@ -22,7 +22,7 @@ def feed(request):
     )  # .objects --> Get all the objects from the database
     # print(allposts)
     user = request.user
-    CSEsubjects = {
+    CSEsubjects = [
         "Engineering Mathematics",
         "Discrete Mathematics",
         "Programming in C",
@@ -34,8 +34,9 @@ def feed(request):
         "Compiler Design",
         "Database Managment System",
         "Computer Networks",
-    }
-    EEsubjects = {
+        "Others",
+    ]
+    EEsubjects = [
         "Engineering Mathematics",
         "Electric Circuits",
         "Electromagnetic Fields",
@@ -46,7 +47,8 @@ def feed(request):
         "Electrical and Electronic Measurements",
         "Analog and Digital Electronics",
         "Power Electronics",
-    }
+        "Others",
+    ]
     ECEsubjects = {
         "Engineering Mathematics",
         "Network Signals & Systems",
@@ -56,8 +58,9 @@ def feed(request):
         "Control Systems",
         "Communications",
         "Electromagnetics",
+        "Others",
     }
-    AEIEsubjects = {
+    AEIEsubjects = [
         "Engineering Mathematics",
         "Electricity and Magnetism",
         "Electrical Circuits and Machines",
@@ -68,7 +71,8 @@ def feed(request):
         "Measurements",
         "Sensors and Industrial Instrumentation",
         "Communication and Optical Instrumentation",
-    }
+        "Others",
+    ]
     profile = Profile.objects.filter(user=user).first()
 
     if not user.is_staff:
@@ -83,12 +87,14 @@ def feed(request):
     else:
         subjects = CSEsubjects
     allposts = allposts.filter(subject__in=subjects)
-
+    allposts = allposts.filter(branch=profile.branch)
+    allposts = allposts.order_by("-timestamp")
     if profile.safe_mode:
         for post in allposts:
             profanity.load_censor_words()
             post.title = profanity.censor(post.title)
             post.content = profanity.censor(post.content)
+            post.tags = profanity.censor(post.tags)
 
     context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
@@ -107,7 +113,7 @@ def question(request, slug):
         profanity.load_censor_words()
         post.title = profanity.censor(post.title)
         post.content = profanity.censor(post.content)
-
+        post.tags = profanity.censor(post.tags)
     # Comments Corresponding to post
     comments = Answer.objects.filter(
         post=post, parent=None
@@ -139,7 +145,7 @@ def question(request, slug):
             reply_Dict[reply.parent.serial_no].append(reply)
 
     user = request.user
-    CSEsubjects = {
+    CSEsubjects = [
         "Engineering Mathematics",
         "Discrete Mathematics",
         "Programming in C",
@@ -151,8 +157,9 @@ def question(request, slug):
         "Compiler Design",
         "Database Managment System",
         "Computer Networks",
-    }
-    EEsubjects = {
+        "Others",
+    ]
+    EEsubjects = [
         "Engineering Mathematics",
         "Electric Circuits",
         "Electromagnetic Fields",
@@ -163,8 +170,9 @@ def question(request, slug):
         "Electrical and Electronic Measurements",
         "Analog and Digital Electronics",
         "Power Electronics",
-    }
-    ECEsubjects = {
+        "Others",
+    ]
+    ECEsubjects = [
         "Engineering Mathematics",
         "Network Signals & Systems",
         "Electronic Devices",
@@ -173,8 +181,9 @@ def question(request, slug):
         "Control Systems",
         "Communications",
         "Electromagnetics",
-    }
-    AEIEsubjects = {
+        "Others",
+    ]
+    AEIEsubjects = [
         "Engineering Mathematics",
         "Electricity and Magnetism",
         "Electrical Circuits and Machines",
@@ -185,7 +194,8 @@ def question(request, slug):
         "Measurements",
         "Sensors and Industrial Instrumentation",
         "Communication and Optical Instrumentation",
-    }
+        "Others",
+    ]
     profile = Profile.objects.filter(user=user).first()
     if not user.is_staff:
         if profile.branch == "EE":
@@ -260,7 +270,10 @@ def uploadquestion(request):
         content = request.POST.get("content")
         subject = request.POST.get("subject")
         author = request.user
-
+        tags = request.POST.get("tags")
+        user = request.user
+        profile = Profile.objects.filter(user=user).first()
+        branch = profile.branch
         # title = profanity.censor(title)
         # content = profanity.censor(content)
 
@@ -280,6 +293,8 @@ def uploadquestion(request):
                     author=author,
                     slug=slug,
                     timestamp=timestamp,
+                    tags=tags,
+                    branch=branch,
                 )
                 messages.success(request, "Question uploaded successfully")
 
@@ -296,7 +311,7 @@ def filter(request):
         messages.warning(request, "No search results found. Please refine your search.")
 
     user = request.user
-    CSEsubjects = {
+    CSEsubjects = [
         "Engineering Mathematics",
         "Discrete Mathematics",
         "Programming in C",
@@ -308,8 +323,9 @@ def filter(request):
         "Compiler Design",
         "Database Managment System",
         "Computer Networks",
-    }
-    EEsubjects = {
+        "Others",
+    ]
+    EEsubjects = [
         "Engineering Mathematics",
         "Electric Circuits",
         "Electromagnetic Fields",
@@ -320,8 +336,9 @@ def filter(request):
         "Electrical and Electronic Measurements",
         "Analog and Digital Electronics",
         "Power Electronics",
-    }
-    ECEsubjects = {
+        "Others",
+    ]
+    ECEsubjects = [
         "Engineering Mathematics",
         "Network Signals & Systems",
         "Electronic Devices",
@@ -330,8 +347,9 @@ def filter(request):
         "Control Systems",
         "Communications",
         "Electromagnetics",
-    }
-    AEIEsubjects = {
+        "Others",
+    ]
+    AEIEsubjects = [
         "Engineering Mathematics",
         "Electricity and Magnetism",
         "Electrical Circuits and Machines",
@@ -342,7 +360,8 @@ def filter(request):
         "Measurements",
         "Sensors and Industrial Instrumentation",
         "Communication and Optical Instrumentation",
-    }
+        "Others",
+    ]
     profile = Profile.objects.filter(user=user).first()
     if not user.is_staff:
         if profile.branch == "EE":

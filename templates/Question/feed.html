@@ -29,6 +29,7 @@
                 name="title"
                 class="form-control"
                 id="title"
+                placeholder="Enter Title of Question"
                 required
               />
             </div>
@@ -40,6 +41,10 @@
                 <option value="{{subject}}">{{subject}}</option>
                 {% endfor %}
               </select>
+            </div>
+            <div class="form-group mt-3 mx-2">
+              <label for="question">Tags</label>
+              <input type="text" name="tags" class="form-control" id="tags" maxlength="35" placeholder="Enter tags separated by comma"/>
             </div>
             <div class="form-group mt-3 mx-2">
               <label for="description">Content</label>
@@ -91,6 +96,9 @@
             </button>
           </form>
           {% endfor %}
+          <button class="btn btn-rounded btn-sm btn-outline-primary my-0 mx-4 pull-right" style="border-radius: 16px;" onclick="location.href='/question'">
+            Show All
+          </button>
         </div>
       </div>
     </section>
@@ -141,14 +149,17 @@
                 asked by 
                 <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
                 
-                  on: {{ post.timestamp|date:"M d,Y" }}
+                  on : {{ post.timestamp|date:"M d,Y" }}
                 </small>
               </p>
           </form>
           <div class="mb-1 text-muted">{{post.datetime}}</div>
           <div class="markdown-content"><a class="text-decoration-none text-black" href="/question/{{post.slug}}">{{post.content | markdown | safe | truncatechars:150}}</a></div>
-          <sup><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span></sup>
-          
+          <sup><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span>&nbsp;
+          {% for tag in post.split_tags %} 
+          <span class="badge alert-warning" style="font-size: 11px; vertical-align: top;">{{ tag }}</span>
+          {% endfor %}
+          </sup>
         </div>
       </div>
       {% endfor %}
