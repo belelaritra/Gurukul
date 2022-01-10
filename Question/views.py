@@ -99,8 +99,8 @@ def question(request, slug):
     post = Question.objects.filter(slug=slug).first()  # .filter --> Filter the objects
     user = request.user
     if user.username != post.author:
-            post.views = post.views + 1
-            post.save()
+        post.views = post.views + 1
+        post.save()
     user_id = user.id
     profile = Profile.objects.filter(user_id=user_id).first()
     if profile.safe_mode:
@@ -486,6 +486,7 @@ def delete_reply(request):
         messages.success(request, "Reply deleted successfully")
         return redirect(f"/question/{slug}")
 
+
 @login_required(login_url="/login")
 def like_question(request):
     if request.method == "POST":
@@ -501,6 +502,7 @@ def like_question(request):
         post.save()
         user = request.user
         return redirect(f"/question/{slug}")
+
 
 @login_required(login_url="/login")
 def dislike_question(request):
