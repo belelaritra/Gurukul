@@ -21,10 +21,10 @@ class Question(models.Model):
     likes = models.ManyToManyField(User, related_name="likes", blank=True)
     dislikes = models.ManyToManyField(User, related_name="dislikes", blank=True)
     # Will show the name of the table in the admin page (not Contact_object)
-    
+
     def total_likes(self):
         return self.likes.count()
-    
+
     def total_dislikes(self):
         return self.dislikes.count()
 
