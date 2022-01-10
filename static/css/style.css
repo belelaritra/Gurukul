@@ -507,6 +507,14 @@ section {
   width: 25px;
 }
 
+.markdown-content{
+  width: 100%;
+}
+.markdown-content img{
+  width: 100%;
+  height: auto;
+}
+
 /*--------------------------------------------------------------
 # Featured Services
 --------------------------------------------------------------*/
