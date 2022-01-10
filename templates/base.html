@@ -126,8 +126,12 @@
         <li class="dropdown">
           <a href="#"
             ><span
-              ><i class="fa fa-user-circle" aria-hidden="true"></i>
-
+              >
+              {% if request.user.profile.profile_pic %}
+                  <img src="{{ request.user.profile.profile_pic.url }}" class="head-ico rounded-circle" height="50%">
+              {% else %}
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+              {% endif %}
               {{ request.user.username }}</span
             >
             <i class="bi bi-chevron-down"></i
@@ -137,28 +141,30 @@
               <form
                 method="POST"
                 action="/user"
-                class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
+                class="form-inline md-form form-sm mt-0 rounded pull-left"
               >
                 {% csrf_token %}
                 <input
                   hidden
                   name="username"
                   id="username"
-                  class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+                  class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-left"
                   type="text"
                   value="{{ request.user.username }}"
-                />
-                <button
+                /><button
                   class="dropdown-item btn btn-rounded btn-sm my-0"
-                  type="submit"
-                >
-                  {{ request.user.username }}
+                  type="submit">
+                  <a href="#">
+                    <span>
+                      <i class="fa fa-user my-0" aria-hidden="true"></i>&nbsp;Profile Settings
+                    </span>
+                  </a>
                 </button>
               </form>
             </li>
             <li>
               <a class="dropdown-item" href="/logout"
-                ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+                ><span><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</span>
               </a>
             </li>
           </ul>

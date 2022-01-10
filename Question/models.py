@@ -17,7 +17,17 @@ class Question(models.Model):
     timestamp = models.DateTimeField(blank=True)
     edited = models.BooleanField(default=False)
     edited_timestamp = models.DateTimeField(blank=True, null=True)
+    views = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
+    dislikes = models.ManyToManyField(User, related_name="dislikes", blank=True)
     # Will show the name of the table in the admin page (not Contact_object)
+    
+    def total_likes(self):
+        return self.likes.count()
+    
+    def total_dislikes(self):
+        return self.dislikes.count()
+
     def __str__(self):
         return str(self.serial_no) + ". " + self.title + " - " + self.author
 

@@ -8,7 +8,7 @@ class UploadFiles(models.Model):
     title = models.CharField(max_length=100)
     ISBN = models.IntegerField(blank=True, null=True)
     author = models.CharField(max_length=100)
-    bookfile = models.FileField(blank=True)
+    bookfile = models.FileField(blank=True, null=True, upload_to="books/")
     image_url = models.CharField(max_length=100, blank=True, null=True)
     timestamp = models.DateTimeField(blank=True)
 
