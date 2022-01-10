@@ -2,41 +2,168 @@
 
 {% block title %} Search Results {% endblock title %}
 {% block blogactive %} active {% endblock blogactive %}
-
 {% block body %}
+{% load markdown_extras %}
+<div class="wrap">
+  <div class="sidenav">
+    <section id="contact" class="contact">
+      <div class="section-title">
+        <span>Add Question</span>
+        <h2>Add Question</h2>
+      </div>
 
-<div class="container my-3">
-    <h2>Search Results:</h2>
-    {% if allposts %}
-
-        {% for post in allposts %}
-            
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-primary">Article by: {{post.author}}</strong>
-                    <h3 class="mb-0">{{post.title}}</h3>
-                    <div class="mb-1 text-muted">{{post.datetime}}</div>
-                    <p class="card-text mb-auto">{{post.content | truncatechars:150}}</p>
-                    <div class="my-2">
-                        <a href="/question/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
-                    </div>
-                </div>
-                <!-- <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                </div> -->
+      <div class="row">
+        <div class="question-container">
+          <form
+            action="/question/uploadquestion"
+            method="POST"
+            role="form"
+            class="question-form"
+          >
+            {% csrf_token %}
+            <div class="form-group mt-3 mx-2">
+              <label for="title">Title</label>
+              <input
+                type="text"
+                name="title"
+                class="form-control"
+                id="title"
+                placeholder="Enter Title of Question"
+                required
+              />
             </div>
+            <div class="form-group mt-3 mx-2">
+              <label for="subject">Subject</label>
+              <select class="form-control" name="subject" id="subject" required>
+                <option value="">Select Subject</option>
+                {% for subject in subjects %}
+                <option value="{{subject}}">{{subject}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group mt-3 mx-2">
+              <label for="question">Tags</label>
+              <input type="text" name="tags" class="form-control" id="tags" maxlength="35" placeholder="Enter tags separated by comma"/>
+            </div>
+            <div class="form-group mt-3 mx-2">
+              <label for="description">Content</label>
+              <textarea
+                class="form-control"
+                name="content"
+                id="content"
+                rows="5"
+                onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+                placeholder="# : Headings&#10;* : Italic&#10;** : Bold&#10;> : Blockquote&#10;``` : Code&#10;1. : Ordered List&#10;- : Unordered List&#10;- [x] : Task List&#10;--- : Horizontal Rule&#10;[...](...) : Link&#10;![...](...) : Image&#10;"
+                required
+              ></textarea>
+            </div>
+            <div class="text-center">
+              <button type="submit">Post Question</button>
+            </div>
+            <br />
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="sidenavleft">
+    <section id="contact" class="contact">
+      <div class="section-title">
+        <span>More</span>
+        <h2>Topics</h2>
+      </div>
 
-        {% endfor %}
+      <div class="row">
+        <div class="question-container">
+          {% for subject in subjects %}
+          <form
+            method="GET"
+            action="/question/filter"
+            class="form-inline md-form form-sm mt-0 mx-4 rounded pull-right"
+          >
+            <input
+              hidden
+              name="subject"
+              id="subject"
+              class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+              type="text"
+              value="{{ subject }}"
+              aria-label="Search"
+            />
+            <button class="btn btn-rounded btn-sm my-0" type="submit">
+              {{ subject }}
+            </button>
+          </form>
+          {% endfor %}
+          <button class="btn btn-rounded btn-sm btn-outline-primary my-0 mx-4 pull-right" style="border-radius: 16px;" onclick="location.href='/question'">
+            Show All
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div>
+    <div class="container my-3">
+      <div class="section-title">
+        <span>Questions</span>
+        <h2>Asked Questions</h2>
+      </div>
 
-    {% else %}
-        <p>Your search query: <b>{{query | truncatechars:50}}</b> did not match any documents.<br>Suggestions :
-            <ul>
-                <li>Try different keyworkds.</li>
-                <li>Make sure that all words are spelled correctly.</li>
-                <li>Try more general keywords.</li>
-                <li>Try fewer keywords.</li>
-            </ul></p>
-    {% endif %}
+      {% for post in allposts %}
+
+      <div
+        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 my-4 shadow-sm h-md-250 position-relative"
+      >
+        <div class="col p-4 d-flex flex-column position-static">
+          
+          <h3 class="mb-0">
+            <a
+              class="text-decoration-none"
+              href="/question/{{post.slug}}"
+              >{{post.title}}</a
+            >
+          </h3>
+        {% comment %} 
+          <form
+            method="GET"
+            action="/profile"
+            class="form-inline md-form form-sm mt-0 rounded pull-right"
+            id = "author"
+          >
+            <input
+              hidden
+              name="username"
+              id="username"
+              class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+              type="text"
+              value="{{ post.author }}"
+              aria-label="Search"
+            />
+            <button class="btn btn-link btn-sm my-0" style="position:relative;" type="submit">
+                  @{{ post.author }}
+            </button> 
+          </form>
+        {% endcomment %}
+              <p class="text-muted"><small>
+                asked by 
+                <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+                
+                  on : {{ post.timestamp|date:"M d,Y" }}
+                </small>
+              </p>
+          </form>
+          <div class="mb-1 text-muted">{{post.datetime}}</div>
+          <div class="markdown-content"><a class="text-decoration-none text-black" href="/question/{{post.slug}}">{{post.content | markdown | safe | truncatechars:150}}</a></div>
+          <sup><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span>&nbsp;
+            {% for tag in post.split_tags %} 
+            <span class="badge alert-warning" style="font-size: 11px; vertical-align: top;">{{ tag }}</span>
+            {% endfor %}
+        </sup>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 
 {% endblock body %}

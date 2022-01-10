@@ -14,24 +14,29 @@
       <div class="section-title-left">
       <span style="font-size:31px">{{post.title}}</span>
       <h2>{{post.title}}</h2>
+      <p class="blog-post-meta text-muted" style="font-size:12px">    
+        {{post.timestamp}} by
+        {% if request.user.username == post.author %}
+        <a href="/profile/?username={{ post.author }}">&nbsp;You</a>
+        {% else %}
+          <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+        {% endif %}
+        {% if post.edited %}
+          <a class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </a>
+      {% endif %}
+      </p>
       </div>    
     </div>
-  </div> 
-
-  <p class="blog-post-meta">    
-    {{post.timestamp}} by
-    {% if request.user.username == post.author %}
-    <a href="/profile/?username={{ post.author }}">You</a>
-    {% else %}
-      <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
-    {% endif %}
-    {% if post.edited %}
-    <span class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </span>
-    {% endif %}
-  </p>
 <div class="markdown-content">
   {{ post.content | markdown | safe }}
 </div>
+<sup class="my-2">
+  <a href="/question/filter?subject={{post.subject}}"><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span></a>&nbsp;
+{% for tag in post.split_tags %} 
+  <a href="/search/?query={{tag}}"><span class="badge alert-warning" style="font-size: 11px; vertical-align: top;">{{ tag }}</span></a>
+{% endfor %}
+</sup>
+
 </div>
 
 {% comment %} ==================================================== Edit Delete {% endcomment %}
@@ -689,7 +694,8 @@
 
   {% endfor %} {% endif %}
 </div>
-{% comment %} <div class="sidenav">
+
+<div class="sidenav">
   <section id="contact" class="contact">
     <div class="section-title">
       <span>Question</span>
@@ -712,6 +718,7 @@
               name="title"
               class="form-control"
               id="title"
+              placeholder="Enter Title of Question"
               required
             />
           </div>
@@ -723,6 +730,10 @@
               <option value="{{subject}}">{{subject}}</option>
               {% endfor %}
             </select>
+          </div>
+          <div class="form-group mt-3 mx-2">
+            <label for="question">Tags</label>
+            <input type="text" name="tags" class="form-control" id="tags" maxlength="35" placeholder="Enter tags separated by comma"/>
           </div>
           <div class="form-group mt-3 mx-2">
             <label for="description">Content</label>
@@ -744,7 +755,7 @@
       </div>
     </div>
   </section>
-</div> {% endcomment %}
+</div> 
 <div class="sidenavleft">
   <section id="contact" class="contact">
     <div class="section-title">
@@ -774,6 +785,9 @@
           </button>
         </form>
         {% endfor %}
+        <button class="btn btn-rounded btn-sm btn-outline-primary my-0 mx-4 pull-right" style="border-radius: 16px;" onclick="location.href='/question'">
+          Show All
+        </button>
       </div>
     </div>
   </section>

@@ -225,17 +225,94 @@ def search(request):
     # Else
     else:
         allposts_Title = Question.objects.filter(
-            title__icontains=query
+            title__icontains=query, branch=request.user.profile.branch
         )  # .objects --> Get all the objects from the database
-        allposts_Content = Question.objects.filter(
-            content__icontains=query
-        )  # Content contains Query
-        allposts_Subject = Question.objects.filter(subject__icontains=query)
-        allposts = allposts_Title | allposts_Content | allposts_Subject
+        allposts_Tags = Question.objects.filter(
+            tags__icontains=query, branch=request.user.profile.branch
+        )
+        allposts_Subject = Question.objects.filter(
+            subject__icontains=query, branch=request.user.profile.branch
+        )
+        allposts = allposts_Title | allposts_Tags | allposts_Subject
+        allposts = allposts.order_by("-timestamp")
         # Union --> Get all the objects from the database
     if allposts.count() == 0:
         messages.warning(request, "No search results found. Please refine your search.")
-    params = {"allposts": allposts, "query": query}
+    user = request.user
+    CSEsubjects = [
+        "Engineering Mathematics",
+        "Discrete Mathematics",
+        "Programming in C",
+        "Data Structure & Algorithm",
+        "Digital Logic",
+        "Computer Organisation",
+        "Computer Architecture",
+        "Operating System",
+        "Compiler Design",
+        "Database Managment System",
+        "Computer Networks",
+        "Others",
+    ]
+    EEsubjects = [
+        "Engineering Mathematics",
+        "Electric Circuits",
+        "Electromagnetic Fields",
+        "Signals and Systems",
+        "Electrical Machines",
+        "Power Systems",
+        "Control Systems",
+        "Electrical and Electronic Measurements",
+        "Analog and Digital Electronics",
+        "Power Electronics",
+        "Others",
+    ]
+    ECEsubjects = {
+        "Engineering Mathematics",
+        "Network Signals & Systems",
+        "Electronic Devices",
+        "Analog Circuits",
+        "Digital Circuits",
+        "Control Systems",
+        "Communications",
+        "Electromagnetics",
+        "Others",
+    }
+    AEIEsubjects = [
+        "Engineering Mathematics",
+        "Electricity and Magnetism",
+        "Electrical Circuits and Machines",
+        "Signals and Systems",
+        "Control Systems",
+        "Analog Electronics",
+        "Digital Electronics",
+        "Measurements",
+        "Sensors and Industrial Instrumentation",
+        "Communication and Optical Instrumentation",
+        "Others",
+    ]
+    profile = Profile.objects.filter(user=user).first()
+
+    if not user.is_staff:
+        if profile.branch == "EE":
+            subjects = EEsubjects
+        elif profile.branch == "ECE":
+            subjects = ECEsubjects
+        elif profile.branch == "AEIE":
+            subjects = AEIEsubjects
+        else:
+            subjects = CSEsubjects
+    else:
+        subjects = CSEsubjects
+    allposts = allposts.filter(subject__in=subjects)
+    allposts = allposts.filter(branch=profile.branch)
+    allposts = allposts.order_by("-timestamp")
+    if profile.safe_mode:
+        for post in allposts:
+            profanity.load_censor_words()
+            post.title = profanity.censor(post.title)
+            post.content = profanity.censor(post.content)
+            post.tags = profanity.censor(post.tags)
+    params = {"allposts": allposts, "query": query, "subjects": subjects}
     return render(request, "Account/search.html", params)
     # return HttpResponse('Search')
 
