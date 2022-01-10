@@ -7,20 +7,22 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='UploadFiles',
+            name="UploadFiles",
             fields=[
-                ('serial_no', models.AutoField(primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=100)),
-                ('ISBN', models.IntegerField(blank=True, null=True)),
-                ('author', models.CharField(max_length=100)),
-                ('bookfile', models.FileField(blank=True, null=True, upload_to='books/')),
-                ('image_url', models.CharField(blank=True, max_length=100, null=True)),
-                ('timestamp', models.DateTimeField(blank=True)),
+                ("serial_no", models.AutoField(primary_key=True, serialize=False)),
+                ("title", models.CharField(max_length=100)),
+                ("ISBN", models.IntegerField(blank=True, null=True)),
+                ("author", models.CharField(max_length=100)),
+                (
+                    "bookfile",
+                    models.FileField(blank=True, null=True, upload_to="books/"),
+                ),
+                ("image_url", models.CharField(blank=True, max_length=100, null=True)),
+                ("timestamp", models.DateTimeField(blank=True)),
             ],
         ),
     ]

@@ -16,33 +16,62 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('serial_no', models.AutoField(primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=100)),
-                ('content', models.TextField()),
-                ('author', models.CharField(max_length=100)),
-                ('slug', models.SlugField(max_length=100)),
-                ('subject', models.CharField(max_length=100, null=True)),
-                ('timestamp', models.DateTimeField(blank=True)),
-                ('edited', models.BooleanField(default=False)),
-                ('edited_timestamp', models.DateTimeField(blank=True, null=True)),
-                ('views', models.IntegerField(default=0)),
-                ('dislikes', models.ManyToManyField(blank=True, related_name='dislikes', to=settings.AUTH_USER_MODEL)),
-                ('likes', models.ManyToManyField(blank=True, related_name='likes', to=settings.AUTH_USER_MODEL)),
+                ("serial_no", models.AutoField(primary_key=True, serialize=False)),
+                ("title", models.CharField(max_length=100)),
+                ("content", models.TextField()),
+                ("author", models.CharField(max_length=100)),
+                ("slug", models.SlugField(max_length=100)),
+                ("subject", models.CharField(max_length=100, null=True)),
+                ("timestamp", models.DateTimeField(blank=True)),
+                ("edited", models.BooleanField(default=False)),
+                ("edited_timestamp", models.DateTimeField(blank=True, null=True)),
+                ("views", models.IntegerField(default=0)),
+                (
+                    "dislikes",
+                    models.ManyToManyField(
+                        blank=True, related_name="dislikes", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
+                (
+                    "likes",
+                    models.ManyToManyField(
+                        blank=True, related_name="likes", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Answer',
+            name="Answer",
             fields=[
-                ('serial_no', models.AutoField(primary_key=True, serialize=False)),
-                ('comment', models.TextField()),
-                ('timestamp', models.DateTimeField(default=django.utils.timezone.now)),
-                ('edited', models.BooleanField(default=False)),
-                ('edited_timestamp', models.DateTimeField(blank=True, null=True)),
-                ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Question.answer')),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Question.question')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ("serial_no", models.AutoField(primary_key=True, serialize=False)),
+                ("comment", models.TextField()),
+                ("timestamp", models.DateTimeField(default=django.utils.timezone.now)),
+                ("edited", models.BooleanField(default=False)),
+                ("edited_timestamp", models.DateTimeField(blank=True, null=True)),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="Question.answer",
+                    ),
+                ),
+                (
+                    "post",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="Question.question",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
