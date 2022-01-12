@@ -14,10 +14,36 @@ class Question(models.Model):
     author = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
     subject = models.CharField(max_length=100, null=True)
+    tags = models.CharField(max_length=40, null=True, blank=True)
     timestamp = models.DateTimeField(blank=True)
     edited = models.BooleanField(default=False)
     edited_timestamp = models.DateTimeField(blank=True, null=True)
-    # Will show the name of the table in the admin page (not Contact_object)
+    views = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
+    dislikes = models.ManyToManyField(User, related_name="dislikes", blank=True)
+    branch = models.CharField(
+        max_length=4,
+        choices=[
+            ("CSE", "CSE"),
+            ("ECE", "ECE"),
+            ("EE", "EE"),
+            ("IT", "IT"),
+            ("AEIE", "AEIE"),
+        ],
+        default="CSE",
+    )
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_dislikes(self):
+        return self.dislikes.count()
+
+    def split_tags(self):
+        if self.tags:
+            return self.tags.split(",")
+        return []
+
     def __str__(self):
         return str(self.serial_no) + ". " + self.title + " - " + self.author
 

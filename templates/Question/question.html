@@ -14,28 +14,37 @@
       <div class="section-title-left">
       <span style="font-size:31px">{{post.title}}</span>
       <h2>{{post.title}}</h2>
+      <p class="blog-post-meta text-muted" style="font-size:12px">    
+        {{post.timestamp}} by
+        {% if request.user.username == post.author %}
+        <a href="/profile/?username={{ post.author }}">&nbsp;You</a>
+        {% else %}
+          <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
+        {% endif %}
+        {% if post.edited %}
+          <a class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </a>
+      {% endif %}
+      </p>
       </div>    
     </div>
-  </div> 
-
-  <p class="blog-post-meta">    
-    {{post.timestamp}} by
-    {% if request.user.username == post.author %}
-    <a href="/profile/?username={{ post.author }}">You</a>
-    {% else %}
-      <a href="/profile/?username={{ post.author }}">@{{ post.author }}</a>
-    {% endif %}
-    {% if post.edited %}
-    <span class="badge alert-white text-muted">(Edited) {{post.edited_timestamp | naturaltime }} </span>
-    {% endif %}
-  </p>
-
+<div class="markdown-content">
   {{ post.content | markdown | safe }}
+</div>
+<sup class="my-2">
+  <a href="/question/filter?subject={{post.subject}}"><span class="badge alert-primary" style="font-size: 11px; vertical-align: top;">{{post.subject}}</span></a>&nbsp;
+{% for tag in post.split_tags %} 
+  <a href="/search/?query={{tag}}"><span class="badge alert-warning" style="font-size: 11px; vertical-align: top;">{{ tag }}</span></a>
+{% endfor %}
+</sup>
+
 </div>
 
 {% comment %} ==================================================== Edit Delete {% endcomment %}
 {% if request.user.username == post.author%}
 <div class="container">
+    <small><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{post.total_likes}}</span></small>
+    &nbsp;&nbsp;<small><span><i class="fas fa-thumbs-down"></i> {{post.total_dislikes}}</span></small>
+    &nbsp;&nbsp;<small><span><i class="fa fa-eye" aria-hidden="true"></i> {{post.views}} views</span></small>
   <a
     href=""
     class="btn btn-white btn-sm btn-rounded"
@@ -156,8 +165,43 @@
       </div>
     </div>
   </div>
-  {% endif %}
+  {% else %}
+  <div class="container">
+    {% comment %} <small><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{post.like}}</span></small>
+    &nbsp;&nbsp;<small><span><i class="fas fa-thumbs-down"></i> {{post.dislike}}</span></small> {% endcomment %}
 
+    <form action="/question/like_question" method="POST" role="form" style ='float: left; padding: 2px;'>
+      {% csrf_token %}
+      <input type="hidden" name="post_id1" id="post_id1" value="{{post.slug}}" />
+      <button type="submit" class="btn btn-white btn-sm btn-rounded">
+        {% if liked %}
+        <i class="fa fa-thumbs-up" style="color:blue;" aria-hidden="true"></i>&nbsp;{{post.total_likes}}
+        {% else %}
+          <i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;{{post.total_likes}}
+        {% endif %}
+      </button>
+    </form>
+
+    <form action="/question/dislike_question" method="POST" role="form" style ='float: left; padding: 2px;'>
+      {% csrf_token %}
+      <input type="hidden" name="post_id2" id="post_id2" value="{{post.slug}}" />
+      <button type="submit" class="btn btn-white btn-sm btn-rounded">
+        {% if disliked %}
+        <i class="fa fa-thumbs-down" style="color:blue;" aria-hidden="true"></i>&nbsp;{{post.total_dislikes}}
+        {% else %}
+        <i class="fas fa-thumbs-down"></i>&nbsp;{{post.total_dislikes}}
+        {% endif %}
+      </button>
+    </form>
+
+    <div style ='float: left; padding: 5px;'>
+      &nbsp;&nbsp;<small><span ><i class="fa fa-eye" aria-hidden="true"></i> {{post.views}} views</span></small>
+  </div>
+
+  </div>
+  {% endif %}
+  <br>
+  <br>
   {% comment %} ==================================================== Comments ============================================== {% endcomment %}
 <div class="container">
   <h5>Answers ({{comments.count}})</h5>
@@ -198,12 +242,16 @@
 
   <div class="row my-3 mx-0">
     <div class="col-md-1">
+      {% if comment.user.profile.profile_pic %}
+          <img src="{{ comment.user.profile.profile_pic.url }}" class="head-ico rounded-circle">
+      {% else %}
       <img
         class="head-ico"
         src="/static/images/user.png"
       />
+      {% endif %}
     </div>
-    <div class="col-md-11">
+    <div class="markdown-content">
       <form
         method="GET"
         action="/profile"
@@ -447,10 +495,14 @@
           {% for reply in reply_Dict|get_dict:comment.serial_no %}
           <div class="row">
             <div class="col-md-1">
+              {% if reply.user.profile.profile_pic %}
+                  <img src="{{ reply.user.profile.profile_pic.url }}" class="head-ico rounded-circle">
+              {% else %}
               <img
                 class="head-ico"
                 src="/static/images/user.png"
               />
+              {% endif %}
             </div>
             <div class="col-md-11">
               <form
@@ -499,7 +551,8 @@
                   <br /> {% endcomment %}
               </form>
               {{reply.comment | markdown | safe}}
-            </div>
+              </div>
+            
           </div>
           {% if request.user.username == reply.user.username %}
 
@@ -641,7 +694,8 @@
 
   {% endfor %} {% endif %}
 </div>
-{% comment %} <div class="sidenav">
+
+<div class="sidenav">
   <section id="contact" class="contact">
     <div class="section-title">
       <span>Question</span>
@@ -664,6 +718,7 @@
               name="title"
               class="form-control"
               id="title"
+              placeholder="Enter Title of Question"
               required
             />
           </div>
@@ -675,6 +730,10 @@
               <option value="{{subject}}">{{subject}}</option>
               {% endfor %}
             </select>
+          </div>
+          <div class="form-group mt-3 mx-2">
+            <label for="question">Tags</label>
+            <input type="text" name="tags" class="form-control" id="tags" maxlength="35" placeholder="Enter tags separated by comma"/>
           </div>
           <div class="form-group mt-3 mx-2">
             <label for="description">Content</label>
@@ -696,7 +755,7 @@
       </div>
     </div>
   </section>
-</div> {% endcomment %}
+</div> 
 <div class="sidenavleft">
   <section id="contact" class="contact">
     <div class="section-title">
@@ -726,6 +785,9 @@
           </button>
         </form>
         {% endfor %}
+        <button class="btn btn-rounded btn-sm btn-outline-primary my-0 mx-4 pull-right" style="border-radius: 16px;" onclick="location.href='/question'">
+          Show All
+        </button>
       </div>
     </div>
   </section>

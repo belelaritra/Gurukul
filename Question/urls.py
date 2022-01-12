@@ -16,4 +16,6 @@ urlpatterns = [
     path("delete_answer", delete_answer, name="delete_answer"),
     path("edit_reply", edit_reply, name="edit_reply"),
     path("delete_reply", delete_reply, name="delete_reply"),
+    path("like_question", like_question, name="like_question"),
+    path("dislike_question", dislike_question, name="dislike_question"),
 ]

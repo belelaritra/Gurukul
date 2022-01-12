@@ -13,7 +13,19 @@ def Upload(request):
         author = request.POST.get("author")
         ISBN = request.POST.get("ISBN")
         bookfile = request.FILES["bookfile"]
-        # slug = request.POST.get("slug")
+        filename = bookfile.name
+        fileextention = filename.split(".")[-1]
+        if fileextention == "pdf":
+            name = (
+                str(title.replace(" ", "_"))
+                + str(datetime.now().strftime("%Y%m%d%H%M%S"))
+                + "."
+                + fileextention
+            )
+            bookfile.name = name
+        else:
+            messages.error(request, "Only PDF files are allowed")
+            return redirect("/upload")
         image_url = (
             "https://books.google.com/books/content?vid=isbn"
             + str(ISBN)
@@ -35,7 +47,7 @@ def Upload(request):
                 messages.error(request, "Something went wrong")
         else:
             messages.error(request, "Please fill all the fields")
-        return redirect("/")
+        return redirect("/upload")
     else:
         return render(request, "Library/uploadfiles.html")
 
