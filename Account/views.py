@@ -487,6 +487,7 @@ def change_profile_pic(request):
         messages.success(request, "Profile pic updated successfully")
         return redirect("/profile/?username=" + str(user_obj.username))
 
+
 def forgot_password(request):
     if request.method == "POST":
         email = request.POST["emailid"]
@@ -509,14 +510,16 @@ def forgot_password(request):
             return redirect("/forgot_password")
     return render(request, "Account/forgot_password.html")
 
+
 def password_notification_email(user):
-    profile=Profile.objects.filter(user_id=user.id).first()
+    profile = Profile.objects.filter(user_id=user.id).first()
     subject = "Password Changed Successfully"
     message = f"Hello {profile.fname}, \n\t This is a confirmation that your password for your Gurukul account {user.username} has just been changed.\nIf you didn't change your password, you can secure you account from here.\n\n{settings.BASE_URL}/forgot_password/\n\nSincerely\nTeam Gurukul"
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [user.email]
     send_mail(subject, message, email_from, recipient_list)
-    
+
+
 def send_forgotpass_mail(user, email, auth_token):
     profile = Profile.objects.filter(user_id=user.id).first()
     subject = "Change Password for Gurukul"
@@ -525,18 +528,22 @@ def send_forgotpass_mail(user, email, auth_token):
     to_list = [email]
     send_mail(subject, message, from_email, to_list, fail_silently=False)
 
+
 def reset_password(request, auth_token):
     try:
         profile_obj = Profile.objects.filter(auth_token=auth_token).first()
         if profile_obj:
-                messages.success(request, "Autherized to reset password")
-                return render(request, "Account/reset_password.html", {"auth_token": auth_token})
+            messages.success(request, "Autherized to reset password")
+            return render(
+                request, "Account/reset_password.html", {"auth_token": auth_token}
+            )
         else:
             messages.error(request, "Invalid auth token")
             return redirect("/error")
     except Exception as e:
         print(e)
         messages.success(request, "Something went wrong")
+
 
 def reset_password_submit(request, auth_token):
     if request.method == "POST":
