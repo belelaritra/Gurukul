@@ -64,7 +64,33 @@
           height="35"
           alt="Gurukul text"
       /></a>
+
+      
+      {% comment %} </ul> {% endcomment %}
       <ul>
+        {% if user.is_authenticated %}
+
+      <li>
+        <form
+          method="GET"
+          action="/search"
+          class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
+        >
+          <input
+            name="query"
+            id="search"
+            class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            required
+          />
+          {% comment %} <button class="btn btn-sm btn-white text-muted" type="submit">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button> {% endcomment %}
+        </form>
+      </li>
+      {% endif %}
         <li>
           <a
             class="nav-link {% block homeactive %} {% endblock homeactive %}"
@@ -101,28 +127,6 @@
           >
         </li>
         {% if user.is_authenticated %}
-
-        <li>
-          <form
-            method="GET"
-            action="/search"
-            class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
-          >
-            <input
-              name="query"
-              id="search"
-              class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-              required
-            />
-            <button class="btn btn-sm btn-white text-muted" type="submit">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </button>
-          </form>
-        </li>
-
         <li class="dropdown">
           <a href="#"
             ><span
@@ -180,14 +184,14 @@
         </li>
 
         <li>
-          <a href="/login" class="link-dark text-decoration-none" role="button">
+          <a href="/login" class="link-dark text-decoration-none {% block loginactive %} {% endblock loginactive %}" role="button">
             Login</a
           >
         </li>
         <li>
           <a
             href="/signup"
-            class="link-dark text-decoration-none"
+            class="link-dark text-decoration-none {% block signupactive %} {% endblock signupactive %} "
             style="padding-right: 15%"
             role="button"
             >Signup</a

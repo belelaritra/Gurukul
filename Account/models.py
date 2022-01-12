@@ -26,6 +26,8 @@ class Profile(models.Model):
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     safe_mode = models.BooleanField(default=True)
+    attempts = models.IntegerField(default=3)
+    next_attempt = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.user.first_name + " " + self.user.last_name
