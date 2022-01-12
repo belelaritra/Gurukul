@@ -95,9 +95,9 @@ def feed(request):
             post.title = profanity.censor(post.title)
             post.content = profanity.censor(post.content)
             post.tags = profanity.censor(post.tags)
-    
+
     for post in allposts:
-        comments = Answer.objects.filter(post=post, parent=None) 
+        comments = Answer.objects.filter(post=post, parent=None)
         post.count = comments.count()
         post.save()
     context = {"allposts": allposts, "subjects": subjects}
