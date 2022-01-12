@@ -55,6 +55,8 @@
     <!-- Navbar -->
 
     <nav id="navbar" class="navbar">
+      <ul>
+        <li>
       <a class="navbar-brand mt-2 mt-lg-0" href="/">
         <img
           src="/static/images/Gurukul.png"
@@ -64,6 +66,31 @@
           height="35"
           alt="Gurukul text"
       /></a>
+      </li>
+      {% if user.is_authenticated %}
+
+      <li>
+        <form
+          method="GET"
+          action="/search"
+          class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
+        >
+          <input
+            name="query"
+            id="search"
+            class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            required
+          />
+          {% comment %} <button class="btn btn-sm btn-white text-muted" type="submit">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button> {% endcomment %}
+        </form>
+      </li>
+      {% endif %}
+      </ul>
       <ul>
         <li>
           <a
@@ -101,28 +128,6 @@
           >
         </li>
         {% if user.is_authenticated %}
-
-        <li>
-          <form
-            method="GET"
-            action="/search"
-            class="form-inline md-form form-sm mt-0 mx-2 rounded pull-right"
-          >
-            <input
-              name="query"
-              id="search"
-              class="form-control-sm ml-3 w-10 border-end-1 border rounded-pill pull-right"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-              required
-            />
-            <button class="btn btn-sm btn-white text-muted" type="submit">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </button>
-          </form>
-        </li>
-
         <li class="dropdown">
           <a href="#"
             ><span
