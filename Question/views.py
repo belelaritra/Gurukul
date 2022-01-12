@@ -96,10 +96,6 @@ def feed(request):
             post.content = profanity.censor(post.content)
             post.tags = profanity.censor(post.tags)
 
-    for post in allposts:
-        comments = Answer.objects.filter(post=post, parent=None)
-        post.count = comments.count()
-        post.save()
     context = {"allposts": allposts, "subjects": subjects}
     return render(request, "Question/feed.html", context)
 
@@ -255,6 +251,8 @@ def comment(request):
         if parent_serial_no == "":
             comment = Answer(comment=comment, user=user, post=post)
             comment.save()
+            post.total_answers = post.total_answers + 1
+            post.save()
             messages.success(request, "Your comment has been posted successfully.")
 
         else:
@@ -266,6 +264,7 @@ def comment(request):
     return redirect(f"/question/{post.slug}")
 
 
+@login_required(login_url="/login")
 def uploadquestion(request):
     # profanity.load_censor_words()
 
@@ -542,3 +541,123 @@ def dislike_question(request):
         post.save()
         user = request.user
         return redirect(f"/question/{slug}")
+
+
+@login_required(login_url="/login")
+def sort_feed(request):
+    if request.method == "GET":
+        sort = request.GET["sort"]
+
+        allposts = (
+            Question.objects.all()
+        )  # .objects --> Get all the objects from the database
+    # print(allposts)
+    user = request.user
+    CSEsubjects = [
+        "Engineering Mathematics",
+        "Discrete Mathematics",
+        "Programming in C",
+        "Data Structure & Algorithm",
+        "Digital Logic",
+        "Computer Organisation",
+        "Computer Architecture",
+        "Operating System",
+        "Compiler Design",
+        "Database Managment System",
+        "Computer Networks",
+        "Others",
+    ]
+    EEsubjects = [
+        "Engineering Mathematics",
+        "Electric Circuits",
+        "Electromagnetic Fields",
+        "Signals and Systems",
+        "Electrical Machines",
+        "Power Systems",
+        "Control Systems",
+        "Electrical and Electronic Measurements",
+        "Analog and Digital Electronics",
+        "Power Electronics",
+        "Others",
+    ]
+    ECEsubjects = {
+        "Engineering Mathematics",
+        "Network Signals & Systems",
+        "Electronic Devices",
+        "Analog Circuits",
+        "Digital Circuits",
+        "Control Systems",
+        "Communications",
+        "Electromagnetics",
+        "Others",
+    }
+    AEIEsubjects = [
+        "Engineering Mathematics",
+        "Electricity and Magnetism",
+        "Electrical Circuits and Machines",
+        "Signals and Systems",
+        "Control Systems",
+        "Analog Electronics",
+        "Digital Electronics",
+        "Measurements",
+        "Sensors and Industrial Instrumentation",
+        "Communication and Optical Instrumentation",
+        "Others",
+    ]
+    profile = Profile.objects.filter(user=user).first()
+
+    if not user.is_staff:
+        if profile.branch == "EE":
+            subjects = EEsubjects
+        elif profile.branch == "ECE":
+            subjects = ECEsubjects
+        elif profile.branch == "AEIE":
+            subjects = AEIEsubjects
+        else:
+            subjects = CSEsubjects
+    else:
+        subjects = CSEsubjects
+    allposts = allposts.filter(subject__in=subjects)
+    allposts = allposts.filter(branch=profile.branch)
+
+    if sort == "newest":
+        allposts = allposts.order_by("-timestamp")
+        sortedby = "Newest"
+    elif sort == "oldest":
+        allposts = allposts.order_by("timestamp")
+        sortedby = "Oldest"
+    elif sort == "mostlikes":
+        allposts = allposts.order_by("-likes")
+        sortedby = "MostLikes"
+    elif sort == "minlikes":
+        allposts = allposts.order_by("likes")
+        sortedby = "MinLikes"
+    elif sort == "mostdislikes":
+        allposts = allposts.order_by("-dislikes")
+        sortedby = "MostDislikes"
+    elif sort == "mindislikes":
+        allposts = allposts.order_by("dislikes")
+        sortedby = "MinDislikes"
+    elif sort == "mostviews":
+        allposts = allposts.order_by("-views")
+        sortedby = "MostViews"
+    elif sort == "minviews":
+        allposts = allposts.order_by("views")
+        sortedby = "MinViews"
+    elif sort == "mostanswers":
+        allposts = allposts.order_by("-total_answers")
+        sortedby = "MostAnswers"
+    elif sort == "minanswers":
+        allposts = allposts.order_by("total_answers")
+        sortedby = "MinAnswers"
+
+    # allposts = allposts.order_by("-timestamp")
+    if profile.safe_mode:
+        for post in allposts:
+            profanity.load_censor_words()
+            post.title = profanity.censor(post.title)
+            post.content = profanity.censor(post.content)
+            post.tags = profanity.censor(post.tags)
+
+    context = {"allposts": allposts, "subjects": subjects, "sortedby": sortedby}
+    return render(request, "Question/feed.html", context)

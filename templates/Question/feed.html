@@ -109,6 +109,44 @@
         <span>Questions</span>
         <h2>Asked Questions</h2>
       </div>
+      
+      <form method="GET" action="/question/sort_feed" name="sortform">
+        <select size="1" name="sort" id="sort" onchange="sortform.submit();" style="border:none; background-color: white;">
+          {% if sortedby == 'Newest' %}
+          <option value="newest" selected>Newest First</option>
+          {% elif sortedby == 'Oldest' %}
+          <option value="oldest" selected>Oldest First</option>
+          {% elif sortedby == 'MostLikes' %}
+          <option value="mostlikes" selected>Most Likes</option>
+          {% elif sortedby == 'MinLikes' %}
+          <option value="minlikes" selected>Least Likes</option>
+          {% elif sortedby == 'MostDislikes' %}
+          <option value="mostdislikes" selected>Most Dislikes</option>
+          {% elif sortedby == 'MinDislikes' %}
+          <option value="mindislikes" selected>Least Dislikes</option>
+          {% elif sortedby == 'MostViews' %}
+          <option value="mostviews" selected>Most Views</option>
+          {% elif sortedby == 'MinViews' %}
+          <option value="minviews" selected>Least Views</option>
+          {% elif sortedby == 'MostAnswers' %}
+          <option value="mostanswers" selected>Most Answers</option>
+          {% elif sortedby == 'MinAnswers' %}
+          <option value="minanswers" selected>Least Answers</option>
+          {% else %}
+          <option value="">Sort By</option>
+          {% endif %}
+          <option value='newest'>Newest First</option>
+          <option value='oldest'>Oldest First</option>
+          <option value='mostlikes'>Most Likes</option>
+          <option value='minlikes'>Least Likes</option>
+          <option value='mostdislikes'>Most Dislikes</option>
+          <option value='mindislikes'>Least Dislikes</option>
+          <option value='mostviews'>Most Views</option>
+          <option value='minviews'>Least Views</option>
+          <option value='mostanswers'>Most Answers</option>
+          <option value='minanswers'>Least Answers</option>
+        </select>
+      </form>
 
       {% for post in allposts %}
 
@@ -165,7 +203,7 @@
             <small><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{post.total_likes}}</span></small>
             &nbsp;&nbsp;<small><span><i class="fas fa-thumbs-down"></i> {{post.total_dislikes}}</span></small>
             &nbsp;&nbsp;<small><span><i class="fa fa-eye" aria-hidden="true"></i> {{post.views}} views</span></small>
-            &nbsp;&nbsp;<small><span><i class="fa fa-comments" aria-hidden="true"></i> {{post.count}} comments</span></small>
+            &nbsp;&nbsp;<small><span><i class="fa fa-comments" aria-hidden="true"></i> {{post.total_answers}} Answers</span></small>
           </div>
         </div>
       </div>

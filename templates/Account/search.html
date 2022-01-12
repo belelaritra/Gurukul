@@ -159,6 +159,13 @@
             <span class="badge alert-warning" style="font-size: 11px; vertical-align: top;">{{ tag }}</span>
             {% endfor %}
         </sup>
+        <hr>
+        <div class="text-black">
+          <small><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{post.total_likes}}</span></small>
+          &nbsp;&nbsp;<small><span><i class="fas fa-thumbs-down"></i> {{post.total_dislikes}}</span></small>
+          &nbsp;&nbsp;<small><span><i class="fa fa-eye" aria-hidden="true"></i> {{post.views}} views</span></small>
+          &nbsp;&nbsp;<small><span><i class="fa fa-comments" aria-hidden="true"></i> {{post.total_answers}} Answers</span></small>
+        </div>
         </div>
       </div>
       {% endfor %}
