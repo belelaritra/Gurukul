@@ -14,6 +14,7 @@ from better_profanity import profanity
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 import os
+from datetime import datetime, timedelta
 
 # Create your views here.
 def home(request):
@@ -40,6 +41,7 @@ def handleLogin(request):
                 return redirect("/login")
             else:
                 profile_obj = Profile.objects.filter(user=user_obj).first()
+                attempts = profile_obj.attempts
                 if not profile_obj.is_verified:
                     messages.error(
                         request,
@@ -47,13 +49,53 @@ def handleLogin(request):
                     )
                     return redirect("/login")
 
+                if attempts == 0:
+                    time = profile_obj.next_attempt
+                    current = datetime.now().replace(tzinfo=None)
+                    timeleft = time - current
+                    if time > current:
+                        min = timeleft.seconds // 60
+                        sec = timeleft.seconds % 60
+                        messages.error(
+                            request,
+                            "You have exceeded the maximum number of login attempts. Please wait for "
+                            + str(min)
+                            + " minutes and "
+                            + str(sec)
+                            + " seconds before trying again",
+                        )
+                        return redirect(
+                            "/login",
+                        )
+                    else:
+                        profile_obj.attempts = 3
+                        profile_obj.next_attempt = None
+                        profile_obj.save()
+
                 user = authenticate(request, username=username, password=password)
 
                 if user is not None:
                     login(request, user)
                     return redirect("/")
                 else:
-                    messages.success(request, "Invalid credentials")
+                    if attempts == 1:
+                        attempts -= 1
+                        profile_obj.attempts = attempts
+                        profile_obj.next_attempt = datetime.now() + timedelta(minutes=1)
+                        profile_obj.save()
+                        messages.error(
+                            request,
+                            "You have exceeded the number of login attempts. Please try again after 10 minutes",
+                        )
+                        return redirect("/login")
+                    else:
+                        attempts -= 1
+                        profile_obj.attempts = attempts
+                        profile_obj.save()
+                        messages.error(
+                            request, f"Invalid credentials! {attempts} attempts left"
+                        )
+
                     return redirect("/login")
 
         return render(request, "Account/login.html")
