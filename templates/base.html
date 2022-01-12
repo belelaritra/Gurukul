@@ -55,8 +55,6 @@
     <!-- Navbar -->
 
     <nav id="navbar" class="navbar">
-      <ul>
-        <li>
       <a class="navbar-brand mt-2 mt-lg-0" href="/">
         <img
           src="/static/images/Gurukul.png"
@@ -66,8 +64,11 @@
           height="35"
           alt="Gurukul text"
       /></a>
-      </li>
-      {% if user.is_authenticated %}
+
+      
+      {% comment %} </ul> {% endcomment %}
+      <ul>
+        {% if user.is_authenticated %}
 
       <li>
         <form
@@ -90,8 +91,6 @@
         </form>
       </li>
       {% endif %}
-      </ul>
-      <ul>
         <li>
           <a
             class="nav-link {% block homeactive %} {% endblock homeactive %}"
