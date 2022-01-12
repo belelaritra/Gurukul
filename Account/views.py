@@ -456,6 +456,7 @@ def change_password(request):
                     return redirect("/profile/?username=" + str(user.username))
                 user.set_password(new_password)
                 user.save()
+                password_notification_email(user)
                 messages.success(request, "Password changed successfully")
             else:
                 messages.error(request, "Password did not match")
@@ -485,3 +486,77 @@ def change_profile_pic(request):
             os.remove(prev_profile_pic.path)
         messages.success(request, "Profile pic updated successfully")
         return redirect("/profile/?username=" + str(user_obj.username))
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST["emailid"]
+        username = request.POST["forgotusername"]
+        if User.objects.filter(email=email).exists():
+            user = User.objects.filter(email=email).first()
+            if user.username == username:
+                auth_token = str(uuid.uuid4())
+                profile_obj = Profile.objects.filter(user_id=user.id).first()
+                profile_obj.auth_token = auth_token
+                profile_obj.save()
+                send_forgotpass_mail(user, email, auth_token)
+                messages.success(request, "Check your email for reset password link")
+                return redirect("/login")
+            else:
+                messages.error(request, "Invalid username")
+                return redirect("/forgotpassword")
+        else:
+            messages.error(request, "Email not found")
+            return redirect("/forgot_password")
+    return render(request, "Account/forgot_password.html")
+
+def password_notification_email(user):
+    profile=Profile.objects.filter(user_id=user.id).first()
+    subject = "Password Changed Successfully"
+    message = f"Hello {profile.fname}, \n\t This is a confirmation that your password for your Gurukul account {user.username} has just been changed.\nIf you didn't change your password, you can secure you account from here.\n\n{settings.BASE_URL}/forgot_password/\n\nSincerely\nTeam Gurukul"
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [user.email]
+    send_mail(subject, message, email_from, recipient_list)
+    
+def send_forgotpass_mail(user, email, auth_token):
+    profile = Profile.objects.filter(user_id=user.id).first()
+    subject = "Change Password for Gurukul"
+    message = f"Hello {profile.fname}, \n\t Someone (hopefully you!) has requested to change your Gurukul password. Please click on the link below to change your password. \n\n{settings.BASE_URL}/reset_password/{auth_token} \n\nIf you did not request this, please ignore this email and your password will remain unchanged. \n\nSincerely\nTeam Gurukul"
+    from_email = settings.EMAIL_HOST_USER
+    to_list = [email]
+    send_mail(subject, message, from_email, to_list, fail_silently=False)
+
+def reset_password(request, auth_token):
+    try:
+        profile_obj = Profile.objects.filter(auth_token=auth_token).first()
+        if profile_obj:
+                messages.success(request, "Autherized to reset password")
+                return render(request, "Account/reset_password.html", {"auth_token": auth_token})
+        else:
+            messages.error(request, "Invalid auth token")
+            return redirect("/error")
+    except Exception as e:
+        print(e)
+        messages.success(request, "Something went wrong")
+
+def reset_password_submit(request, auth_token):
+    if request.method == "POST":
+        new_password = request.POST["newpassword"]
+        confirm_password = request.POST["confirmpassword"]
+        if new_password == confirm_password:
+            if len(new_password) < 5:
+                messages.error(request, "Password is too short")
+                return redirect("/reset_password/" + auth_token)
+            profile_obj = Profile.objects.filter(auth_token=auth_token).first()
+            user = profile_obj.user
+            user.set_password(new_password)
+            user.save()
+            password_notification_email(user)
+            profile_obj.auth_token = ""
+            profile_obj.save()
+            messages.success(request, "Password changed successfully")
+
+            return redirect("/login")
+        else:
+            messages.error(request, "Password did not match")
+            return redirect("/reset_password/" + auth_token)
+    messages.error(request, "Something went wrong")
