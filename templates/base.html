@@ -180,14 +180,14 @@
         </li>
 
         <li>
-          <a href="/login" class="link-dark text-decoration-none" role="button">
+          <a href="/login" class="link-dark text-decoration-none {% block loginactive %} {% endblock loginactive %}" role="button">
             Login</a
           >
         </li>
         <li>
           <a
             href="/signup"
-            class="link-dark text-decoration-none"
+            class="link-dark text-decoration-none {% block signupactive %} {% endblock signupactive %} "
             style="padding-right: 15%"
             role="button"
             >Signup</a
