@@ -32,6 +32,7 @@ class Question(models.Model):
         ],
         default="CSE",
     )
+    total_answers = models.IntegerField(default=0)
 
     def total_likes(self):
         return self.likes.count()
