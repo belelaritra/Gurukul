@@ -23,7 +23,6 @@
 [![Website monip.org](https://img.shields.io/website-up-down-green-red/http/monip.org.svg)](https://gurukul-rcciit.herokuapp.com/)
 [![Heroku](https://pyheroku-badge.herokuapp.com/?app=gurukul-rcciit&style=flat)](https://gurukul-rcciit.herokuapp.com/)
 [![Size](https://github-size-badge.herokuapp.com/belelaritra/Gurukul.svg)](https://github.com/belelaritra/Gurukul)
-![Codes](https://img.shields.io/tokei/lines/github/belelaritra/Gurukul)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![django](https://img.shields.io/badge/django-3.8.10-092E20.svg)](https://pypi.org/project/Django/3.2.10/)[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/belelaritra/Gurukul)
