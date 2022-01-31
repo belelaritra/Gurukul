@@ -1,7 +1,7 @@
 <div align="center">
     <img src="static/images/Gurukul.png" href="https://gurukul-rcciit.herokuapp.com/" height="300" alt="Gurukul Logo"/>
 </div>
-<h1 align="center"> Gurukul </h1>
+<h1 align="center"><img align="buttom" src="https://amgci.com/img/8472-Homepage-Lightbulb-Animation-V3.gif" height="50"/> Gurukul <img align="buttom" src="https://amgci.com/img/8472-Homepage-Lightbulb-Animation-V3.gif" height="50"/></h1>
 <p align="center">
     Gurukul is an online E-Learning platform for RCCIITians.
     <br />
@@ -16,7 +16,7 @@
     <a href="https://github.com/belelaritra/Gurukul/issues">Request Feature</a>
 </p>
 
-## Tech Stack:
+## <img align="bottom" src="https://user-images.githubusercontent.com/47713668/124180781-52ad2b80-dad2-11eb-9abd-9e0f8d6bb6dd.gif" height="20"/> Tech Stack:
 
 <div align="right">
 
@@ -40,7 +40,7 @@
 
 ## <!-- ABOUT THE PROJECT -->
 
-## About The Project:
+## <img align="bottom" src="https://belarschristmas2018home.files.wordpress.com/2019/01/lg.searching-for-loading-icon.gif" height="20"/> About The Project:
 
 <p><a href="https://gurukul-rcciit.herokuapp.com/"></a>Gurukul</a> is an E-learning portal for RCCIITians. Where user can ask questions and get answers from the community of RCCIITians, download E-books from the Digital Library, and much more.
 
@@ -57,7 +57,7 @@ The project is developed by a team of four students of RCCIIT as a part of their
 
 ---
 
-### Clone The Project:
+### <img align="buttom" src="https://images.squarespace-cdn.com/content/v1/52b30d5ee4b06dcbcbf10e39/1569506324870-RAM0L4H02AY702ZEIBRC/interactive-lg.gif" height="27"/> Clone The Project:
 
 ```
 git clone https://github.com/belelaritra/Gurukul
@@ -119,7 +119,7 @@ Now you can access the server at <a href="http://localhost:8000/">`http://localh
 
 ---
 
-## Features:
+## <img align="buttom" src="https://cdn.dribbble.com/users/325262/screenshots/5676357/one-click-connect.gif" height="23"/> Features:
 
 - [Account](./Account):
 
@@ -155,7 +155,7 @@ This code is running live at <a href="https://gurukul-rcciit.herokuapp.com/">gur
 
 ---
 
-## Screenshots:
+## <img align="buttom" src="https://images.squarespace-cdn.com/content/v1/582d05d1e6f2e1f3b3c077be/1520988327665-UQPDQJUVYSOQ2WCHQW7Z/swipe_left.gif" height="30"/> Screenshots:
 
 #### Email Verification:
 <div align="center">
@@ -179,7 +179,7 @@ This code is running live at <a href="https://gurukul-rcciit.herokuapp.com/">gur
 
 ---
 
-## License:
+## <img align="buttom" src="https://cdn.dribbble.com/users/4465/screenshots/3420320/document-loader.gif" height="30"/> License:
 
 Copyright © 2022 <a href="https://gurukul-rcciit.herokuapp.com/">gurukul-rcciit.herokuapp.com</a>
 
@@ -187,7 +187,7 @@ The content of this repository is bound by the <a href ="https://github.com/bele
 
 ---
 
-## Contributors:
+## <img align="buttom" src="https://media0.giphy.com/media/VCsg8HHtr6u6g2iuQ9/giphy.gif?cid=790b76112fdf2ee808806d96ec5b2f3db45125d0829d9973&rid=giphy.gif&ct=s" height="35"/> Contributors:
 
 [![Gurukul](https://contrib.rocks/image?repo=belelaritra/Gurukul)](https://github.com/belelaritra/Gurukul/graphs/contributors)
 
